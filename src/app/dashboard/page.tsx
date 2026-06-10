@@ -12,8 +12,8 @@ import * as XLSX from 'xlsx';
 
 export default function Dashboard() {
     const router = useRouter();
-    const [user, setUser] = useState<any>(null);
-    const [data, setData] = useState<any[]>([]);
+    const [user, setUser] = useState<Record<string, unknown> | null>(null);
+    const [data, setData] = useState<Record<string, unknown>[]>([]);
     const [loading, setLoading] = useState(true);
     const [showModal, setShowModal] = useState(false);
     const [formData, setFormData] = useState<Record<string, string>>({});
@@ -26,6 +26,7 @@ export default function Dashboard() {
         if (groupKeys.length > 0 && !activeTab) {
             setActiveTab(groupKeys[0]);
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [groupKeys]);
 
     useEffect(() => {
@@ -41,11 +42,13 @@ export default function Dashboard() {
                 }
                 setContent(userRes, dataRes);
             } catch (err) {
+                console.error(err);
                 toast.error('Failed to load data');
                 setLoading(false);
             }
         };
 
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const setContent = async (userRes: any, dataRes: any) => {
             setUser((await userRes.json()).user);
             if (dataRes.ok) setData((await dataRes.json()).data || []);
@@ -59,14 +62,18 @@ export default function Dashboard() {
         setFormData(prev => {
             const next = { ...prev, [field]: val };
 
+            // The user requested to disable the dependent auto-fill logic:
             // DEPENDENT LOGIC 1: Auto-fill Synthetic Part No
+            /*
             if (field === 'Engg Part Number' && val) {
                 if (!prev['Synthetic Part No.'] || prev['Synthetic Part No.'] === prev['Engg Part Number'] + 'P' || prev['Synthetic Part No.'].includes(prev['Engg Part Number'])) {
                     next['Synthetic Part No.'] = val + 'P';
                 }
             }
+            */
 
             // DEPENDENT LOGIC 2: Heat Treatment disables tempers
+            /*
             if (field === 'Heat Treatment Applicability') {
                 if (val === 'No') {
                     next['Initial Temper'] = 'N/A';
@@ -76,8 +83,10 @@ export default function Dashboard() {
                     if (next['Final Temper '] === 'N/A') next['Final Temper '] = '';
                 }
             }
+            */
 
             // DEPENDENT LOGIC 3: Material Concatenation
+            /*
             if (['Alloy', 'Initial Temper', 'Sheet Thk (mm)', 'RM Sheet Length (mm)', 'RM Sheet Width (mm)'].includes(field)) {
                 const alloy = next['Alloy'] || '';
                 const temper = next['Initial Temper'] || '';
@@ -89,6 +98,7 @@ export default function Dashboard() {
                     next['Material with Concatenate'] = `TOLE ${alloy} ETAT=${temper} ${thk} X ${wid} X ${len}`.trim();
                 }
             }
+            */
 
             return next;
         });
@@ -115,7 +125,9 @@ export default function Dashboard() {
             } else {
                 toast.error('Error from Server: ' + (json.error || 'Failed to save record.'));
             }
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
         } catch (e: any) {
+            console.error(e);
             toast.error('Network Error: ' + (e?.message || 'Failed while saving.'));
         } finally {
             setSubmitting(false);
@@ -171,13 +183,13 @@ export default function Dashboard() {
         });
 
         // Create a rows array mapped from the database based on headers
-        const dataRows = data.map((item, idx) => {
+        const dataRows = data.map((item: any, idx) => {
             const rowArr: any[] = [];
             PFM_HEADERS.forEach(header => {
                 if (header.includes('SR') && header.includes('NO')) {
                     rowArr.push(idx + 1);
                 } else {
-                    rowArr.push(item.data[header] || '');
+                    rowArr.push(item.data?.[header] || '');
                 }
             });
             return rowArr;
@@ -238,7 +250,7 @@ export default function Dashboard() {
                                 <Maximize2 className="w-8 h-8 text-gray-400" />
                             </div>
                             <h3 className="text-lg font-bold text-gray-700 mb-1">No Data Found</h3>
-                            <p className="text-sm mb-4">Click the "Add PFM Record" button to start logging rows.</p>
+                            <p className="text-sm mb-4">Click the &quot;Add PFM Record&quot; button to start logging rows.</p>
                         </div>
                     ) : (
                         <div className="overflow-x-auto flex-1 max-h-[70vh] custom-scrollbar">
@@ -264,11 +276,17 @@ export default function Dashboard() {
                                     </tr>
                                 </thead>
                                 <tbody className="divide-y divide-gray-100 bg-white">
-                                    {data.map((row, i) => (
-                                        <tr key={row._id} className="hover:bg-tata-light/30 transition-colors group">
+                                    {data.map((row: any, i) => (
+                                        <tr key={row._id as string} className="hover:bg-tata-light/30 transition-colors group">
                                             {PFM_HEADERS.map((h, j) => (
                                                 <td key={j} className="px-5 py-3 whitespace-nowrap border-r border-gray-100 last:border-0 group-hover:bg-tata-light/10">
-                                                    {h.includes('SR') && h.includes('NO') ? i + 1 : row.data[h] || '-'}
+                                                    {h.includes('SR') && h.includes('NO') ? i + 1 :
+                                                        h === 'Part Snap' && row.data?.[h] ? (
+                                                            <a href={row.data?.[h] as string} target="_blank" rel="noopener noreferrer">
+                                                                {/* eslint-disable-next-line @next/next/no-img-element */}
+                                                                <img src={row.data?.[h] as string} alt="snap" className="max-w-[48px] max-h-[48px] object-cover rounded shadow-sm hover:scale-[3] transition-transform origin-left border border-gray-200" />
+                                                            </a>
+                                                        ) : (row.data?.[h] as string) || '-'}
                                                 </td>
                                             ))}
                                         </tr>
@@ -370,6 +388,49 @@ export default function Dashboard() {
                                                             <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-gray-500">
                                                                 <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" /></svg>
                                                             </div>
+                                                        </div>
+                                                    ) : h === 'Part Snap' ? (
+                                                        <div className="relative">
+                                                            <input
+                                                                type="file"
+                                                                accept="image/*"
+                                                                className="w-full px-3.5 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:border-tata-blue focus:ring-2 focus:ring-tata-blue/20 text-sm bg-gray-50 focus:bg-white shadow-sm transition-all hover:border-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-tata-light file:text-tata-blue hover:file:bg-tata-blue/10"
+                                                                onChange={async (e) => {
+                                                                    const file = e.target.files?.[0];
+                                                                    if (file) {
+                                                                        const toastId = toast.loading('Uploading image...');
+                                                                        const fileData = new FormData();
+                                                                        fileData.append('file', file);
+                                                                        try {
+                                                                            const res = await fetch('/api/upload', {
+                                                                                method: 'POST',
+                                                                                body: fileData
+                                                                            });
+                                                                            const data = await res.json();
+                                                                            if (res.ok) {
+                                                                                handleInputChange(h, data.url);
+                                                                                toast.success('Image uploaded successfully!', { id: toastId });
+                                                                            } else {
+                                                                                toast.error(data.error || 'Failed to upload image.', { id: toastId });
+                                                                            }
+                                                                        } catch (err) {
+                                                                            console.error(err);
+                                                                            toast.error('Error uploading image.', { id: toastId });
+                                                                        }
+                                                                    }
+                                                                }}
+                                                            />
+                                                            {formData[h] && (
+                                                                <div className="absolute right-2 top-1/2 -translate-y-1/2">
+                                                                    <CheckCircle2 className="w-5 h-5 text-emerald-500" />
+                                                                </div>
+                                                            )}
+                                                            {formData[h] && (
+                                                                <div className="mt-3">
+                                                                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                                                                    <img src={formData[h]} alt="Part Snap Preview" className="w-full max-h-48 object-contain rounded-md border border-gray-200 bg-gray-50 p-1" />
+                                                                </div>
+                                                            )}
                                                         </div>
                                                     ) : (
                                                         <input
