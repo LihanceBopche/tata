@@ -1,0 +1,38 @@
+export const DROPDOWN_OPTIONS: Record<string, string[]> = {
+    // YES/NO options
+    "Heat Treatment Applicability": ["Yes", "No"],
+    "Chamfer": ["Yes", "No", "NO"],
+    "Conductivity Test": ["Yes", "No"],
+    "Chemical Milling": ["Yes", "No"],
+    "Welding": ["Yes", "No"],
+    "Desensitization ": ["Yes", "No"],
+    "Pre-penetrant etch": ["Yes", "No"],
+    "Non Destructive testing": ["Yes", "No"],
+    "Sand-blasting": ["Yes", "No"],
+    "Pickling": ["Yes", "No"],
+    "TSA": ["Yes", "No"],
+    "CAA": ["Yes", "No"],
+    "Manual CCC (For Electrical bonding area)": ["Yes", "No"],
+    "Primer": ["Yes", "No"],
+    "Topcoat": ["Yes", "No"],
+    "Plastic Coating": ["Yes", "No"],
+    "No Protection": ["Yes", "No"],
+
+    // From PPT
+    "Part Category": ["SKN - Skin", "FRM - Frame", "RIB - Rib", "SPR - Spar", "STR - Stringer", "BRK - Bracket", "FIT - Fitting", "FAR - Fairings", "BEM - Beam", "DOR - Door", "SUP - Support", "WPL - Wing Panels", "SHM - Shims", "ANG - Angles", "INC - Intercostals", "CLP - Clip", "DOU - Doubler", "Detail Part", "Assembly", "Sub-Assembly"],
+    "RM material Type": ["AL - Aluminium", "1000 Series", "2000 Series", "3000 Series", "4000 Series", "5000 Series", "6000 Series", "7000 Series", "Titanium", "Steel"],
+    "Alloy": ["2024PL", "AL - Aluminium", "1000 Series", "2000 Series", "3000 Series", "4000 Series", "5000 Series", "6000 Series", "7000 Series", "Titanium", "Steel"],
+    "RM Input Type": ["SHT - Sheet", "EX - Extrusion", "TB - Tube", "Sheet", "Plate", "Casting", "Forging"],
+    "Part  Complexity": ["5 - Very Complex", "4 - Complex", "3 - Moderate", "2 - Low", "1 - Simple", "Complex"],
+    "Part Complexity": ["5 - Very Complex", "4 - Complex", "3 - Moderate", "2 - Low", "1 - Simple"],
+    "Part Scope": ["TASL-N01", "TASL-H01", "TASL-N02", "Dassault Scope"],
+    "Initial Temper": ["F", "O", "H111", "T3", "T4"],
+    "Final Temper ": ["T42", "T62", "T8", "W", "AQ"],
+    "Part Family's": ["Family 1", "Family 2", "Family 3", "Family 4", "Family 5", "Family 6"],
+    "Major Fabrication Technology": ["Hyd Press", "Routing + HT + Hyd Press", "Machining", "5A Machining", "Chemical Milling", "Conventional"],
+    "Nos of Bends": ["0", "1-2 (C type)", "1-2 (Z Type)", "3-5", ">5"],
+    "Type of Part": ["Flat (> 1M)", "Flat (< 1M)", "Formed (Up to 0.5M)", "Formed (0.5 M to 1.5M)", "Formed (< 1.5 M)"],
+    "Type of Forming": ["Cold Forming (Up 1M)", "Cold Forming (1M - 2.0M)", "Hot Joggle", "Hot Forming (Up to 0.5M)", "Hot Forming (< 0.5M)", "Hyd Press"],
+    "Forming Temper condition": ["O / H111 / F / No Forming", "TX", "AQ / W", "TXXXX", "Non Aluminium Temper"],
+    "Type of Bend": ["Straight", "Single Emboss/Bead", "Convex / Multiple Emboss / Bead / Shallow Forming > 10mm", "Concave / Multiple Emboss / Bead / Shallow Forming 10 - 20mm", "Multi Curvature / Deep Draw (< 30 mm)"]
+};
