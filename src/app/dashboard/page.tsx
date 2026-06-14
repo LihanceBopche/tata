@@ -325,9 +325,9 @@ export default function Dashboard() {
             return;
         }
 
-        const row0 = [];
-        const row1 = [];
-        const row2 = [];
+        const row0: any[] = [];
+        const row1: any[] = [];
+        const row2: any[] = [];
         const merges: XLSX.Range[] = [];
 
         let col0 = 0;
