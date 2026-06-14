@@ -1,9 +1,8 @@
 export const FIELD_GROUPS: Record<string, string[]> = {
   "General": [
-    "Part Snap",
-    "Engg Part Number",
-    "Synthetic Part No.",
-    "Part Scope"
+    "Project Name",
+    "Enter Module",
+    "Enter Module Name"
   ],
   "Part Details": [
     "Part Description",
@@ -29,6 +28,10 @@ export const FIELD_GROUPS: Record<string, string[]> = {
     "RM Remark"
   ],
   "Part Engg Details": [
+    "Part Snap",
+    "Engg Part Number",
+    "Synthetic Part No.",
+    "Part Scope",
     "Functional Class  (As per COS model Properties)",
     "Class Description  (As per DGQT 0.2.0.0001A)",
     "Mfg Code ST10804   (As per COS model Properties)",
@@ -43,25 +46,18 @@ export const FIELD_GROUPS: Record<string, string[]> = {
     "Part Family's",
     "Major Fabrication Technology"
   ],
-  "Proposed Mfg Process": [
-    "Mfg Process ME",
-    "TRB Number & Date"
-  ],
-  "Cross Functional Team Decision": [
-    "TRB Decision",
-    "Final TRB Discussion Base on tool commonization Date: 20-02-2026",
-    "TRB Remark",
-    "Tooling Remarks"
-  ],
-  "Part Identification": [
-    "Part Marking Code"
-  ],
-  "Other Information": [
-    "Remark",
-    "Nos of Tools Mfg",
-    "Nos of Tools Std",
-    "Cutting tools",
-    "SM-ME Remarks"
+  "Base Matrix Sheet": [
+    "Nos of Bends",
+    "Type of Part (Flat , Formed)",
+    "Type of Forming (Hot forming, Cold Forming)",
+    "Forming Temper condition (F,H11,O,T,T42,AQ/W)",
+    "Type of Bend (Concave, convex, straight)",
+    "Joggle (Joggle Depth , Nos of Joggle , Joggle ratio)",
+    "Thickness Mill (Chemical Mill , Mechanical Mill , Nos of Pockets)",
+    "Type of Raw material",
+    "Part Thickness (min, mm)",
+    "GD&T — Hole Position",
+    "GD&T — Form & Profile Controls"
   ],
   "Special Process Details": [
     "Protection Code",
@@ -82,5 +78,25 @@ export const FIELD_GROUPS: Record<string, string[]> = {
     "Plastic Coating",
     "No Protection",
     "Remarks"
+  ],
+  "Part Identification": [
+    "Part Marking Code"
+  ],
+  "Proposed Mfg Process": [
+    "Mfg Process ME",
+    "TRB Number & Date"
+  ],
+  "Cross Functional Team Decision": [
+    "TRB Decision",
+    "Final TRB Discussion Base on tool commonization Date: 20-02-2026",
+    "TRB Remark",
+    "Tooling Remarks"
+  ],
+  "Other Information": [
+    "Remark",
+    "Nos of Tools Mfg",
+    "Nos of Tools Std",
+    "Cutting tools",
+    "SM-ME Remarks"
   ]
 };

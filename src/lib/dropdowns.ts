@@ -1,5 +1,6 @@
 export const DROPDOWN_OPTIONS: Record<string, string[]> = {
     // YES/NO options
+    "Enter Module": ["Yes", "No"],
     "Heat Treatment Applicability": ["Yes", "No"],
     "Chamfer": ["Yes", "No", "NO"],
     "Conductivity Test": ["Yes", "No"],
@@ -31,8 +32,14 @@ export const DROPDOWN_OPTIONS: Record<string, string[]> = {
     "Part Family's": ["Family 1", "Family 2", "Family 3", "Family 4", "Family 5", "Family 6"],
     "Major Fabrication Technology": ["Hyd Press", "Routing + HT + Hyd Press", "Machining", "5A Machining", "Chemical Milling", "Conventional"],
     "Nos of Bends": ["0", "1-2 (C type)", "1-2 (Z Type)", "3-5", ">5"],
-    "Type of Part": ["Flat (> 1M)", "Flat (< 1M)", "Formed (Up to 0.5M)", "Formed (0.5 M to 1.5M)", "Formed (< 1.5 M)"],
-    "Type of Forming": ["Cold Forming (Up 1M)", "Cold Forming (1M - 2.0M)", "Hot Joggle", "Hot Forming (Up to 0.5M)", "Hot Forming (< 0.5M)", "Hyd Press"],
-    "Forming Temper condition": ["O / H111 / F / No Forming", "TX", "AQ / W", "TXXXX", "Non Aluminium Temper"],
-    "Type of Bend": ["Straight", "Single Emboss/Bead", "Convex / Multiple Emboss / Bead / Shallow Forming > 10mm", "Concave / Multiple Emboss / Bead / Shallow Forming 10 - 20mm", "Multi Curvature / Deep Draw (< 30 mm)"]
+    "Type of Part (Flat , Formed)": ["Flat ( Up 1M)", "Flat ( < 1M)", "Formed (Up to 0.5M)", "Formed (0.5 M to 1.5M)", "Formed (< 1.5 M)"],
+    "Type of Forming (Hot forming, Cold Forming)": ["Cold Forming ( Up 1M)", "Cold Forming (1M - 2.0M)", "Hot Joggle", "Hot Forming (Up to 0.5M)", "Hot Forming (< 0.5M)", "Hyd Press"],
+    "Forming Temper condition (F,H11,O,T,T42,AQ/W)": ["O / H111 / F / No Forming (Any Alloy)", "TX", "AQ / W", "TXXXX", "Non Aluminium Temper"],
+    "Type of Bend (Concave, convex, straight)": ["Straight", "Single Emboss/Bead", "Convex / Multiple Emboss / Bead / Shallow Forming > 10mm", "Concave / Multiple Emboss / Bead / Shallow Forming 10 - 20mm", "Multi Curvature / Deep Draw (< 30 mm)"],
+    "Joggle (Joggle Depth , Nos of Joggle , Joggle ratio)": ["Single Joggle / Joggle Depth *** / Joggle Ratio **", "Joggle Nos 1-2 / Joggle Depth *** / Joggle Ratio **", "Joggle Nos 2 -3 / Joggle Depth *** / Joggle Ratio ***", "Joggle Nos 3 - 4 / Joggle Depth *** / Joggle Ratio **", "Joggle Nos <4 / Joggle Depth *** / Joggle Ratio **"],
+    "Thickness Mill (Chemical Mill , Mechanical Mill , Nos of Pockets)": ["No thickness Mill", "Mechanical Mill or Chemical Mill (1 Stage , 1 Pocket)", "Mechanical Mill or Chemical Mill (1-2 Stage , 1-2 Pocket)", "Mechanical Mill or Chemical Mill (2-3 Stage , 2-3 Pocket)", "Mechanical Mill or Chemical Mill (More than 3 Stage , More than 3 Pocket)"],
+    "Type of Raw material": ["Aluminum Shims", "Aluminum Extrusion , Sheet", "Ti Sheet", "Steel Sheet", "Inconal Sheet"],
+    "Part Thickness (min, mm)": ["Up to 0.4 mm", "0.4 - 1.0 mm", "1.0 mm to 1.5 mm", "1.6 mm to 4.0 mm", "> 4.0 mm"],
+    "GD&T — Hole Position": ["No GD&T", "Single Datum / tolerance Limit > 0.8mm / No Hole MMC/LLC", "Multiple Datum / Tolerance Limit : 0.6-0.8 mm / No Hole MMC/LLC", "Multiple Datum / Tolerance Limit : 0.6-0.8 mm / Hole with MMC/LLC", "Multiple Datum / Tolerance Limit < 0.6 mm / Hole with MMC/LLC"],
+    "GD&T — Form & Profile Controls": ["No GD&T", "Flatness > 1mm / Profile >1mm / Straight Profile", "Flatness 0.8–1mm / Profile 0.8–1mm / Straight Profile", "Flatness 0.8–1mm / Profile 0.8–1mm / Straight Profile", "Flatness <0.8mm / Profile <0.8 / Free-form contour"]
 };

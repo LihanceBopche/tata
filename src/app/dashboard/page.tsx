@@ -62,6 +62,15 @@ export default function Dashboard() {
         setFormData(prev => {
             const next = { ...prev, [field]: val };
 
+            // MODULE Conditional Logic
+            if (field === 'Enter Module') {
+                if (val === 'Yes') {
+                    next['Enter Module Name'] = ''; // Clear for user to type
+                } else if (val === 'No') {
+                    next['Enter Module Name'] = 'Not Applicable / OK'; // Auto-fill
+                }
+            }
+
             // The user requested to disable the dependent auto-fill logic:
             // DEPENDENT LOGIC 1: Auto-fill Synthetic Part No
             /*
@@ -106,6 +115,14 @@ export default function Dashboard() {
 
     const handleFormSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+
+        // Block empty submissions
+        const hasValues = Object.values(formData).some(val => val && val.trim() !== '');
+        if (!hasValues) {
+            toast.error('Blank entry not allowed. Please fill out the form.');
+            return;
+        }
+
         setSubmitting(true);
         try {
             const res = await fetch('/api/pfm', {
@@ -306,7 +323,7 @@ export default function Dashboard() {
                         <div className="flex justify-between items-center px-6 py-4 border-b bg-gray-50/80">
                             <div className="flex-1">
                                 <h2 className="text-xl font-bold text-tata-dark flex items-center gap-3">
-                                    Add New PFM Configuration
+                                    Engineering PSM
                                     <span className="text-xs font-semibold px-2.5 py-1 bg-tata-light text-tata-blue rounded-full">
                                         Step {currentIdx + 1} of {groupKeys.length}
                                     </span>
@@ -367,82 +384,87 @@ export default function Dashboard() {
                                     <div className="mb-2 animate-in slide-in-from-right-4 duration-300">
                                         <h3 className="text-2xl font-bold text-gray-800 border-b pb-2 mb-6 border-gray-100">{activeTab} Info</h3>
                                         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-x-6 gap-y-6">
-                                            {FIELD_GROUPS[activeTab]?.map((h, i) => (
-                                                <div key={i} className="flex flex-col group">
-                                                    <label className="text-xs font-bold text-tata-dark mb-1.5 uppercase tracking-wide truncate" title={h}>{h}</label>
-                                                    {DROPDOWN_OPTIONS[h] ? (
-                                                        <div className="relative">
-                                                            <select
-                                                                className="w-full px-3.5 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:border-tata-blue focus:ring-2 focus:ring-tata-blue/20 text-sm bg-white appearance-none shadow-sm transition-shadow hover:border-gray-400 cursor-pointer"
+                                            {FIELD_GROUPS[activeTab]?.map((h, i) => {
+                                                // Conditionally hide Enter Module Name if Enter Module is not Yes
+                                                if (h === 'Enter Module Name' && formData['Enter Module'] !== 'Yes') return null;
+
+                                                return (
+                                                    <div key={i} className="flex flex-col group">
+                                                        <label className="text-xs font-bold text-tata-dark mb-1.5 uppercase tracking-wide truncate" title={h}>{h}</label>
+                                                        {DROPDOWN_OPTIONS[h] ? (
+                                                            <div className="relative">
+                                                                <select
+                                                                    className="w-full px-3.5 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:border-tata-blue focus:ring-2 focus:ring-tata-blue/20 text-sm bg-white appearance-none shadow-sm transition-shadow hover:border-gray-400 cursor-pointer"
+                                                                    value={formData[h] || ''}
+                                                                    onChange={(e) => handleInputChange(h, e.target.value)}
+                                                                >
+                                                                    <option value="" disabled className="text-gray-400">Select {h.toLowerCase()}</option>
+                                                                    {DROPDOWN_OPTIONS[h].map((opt, idx) => (
+                                                                        <option key={idx} value={opt}>{opt}</option>
+                                                                    ))}
+                                                                    {formData[h] && !DROPDOWN_OPTIONS[h].includes(formData[h]) && (
+                                                                        <option value={formData[h]} className="text-tata-blue font-bold italic">{formData[h]} (Auto)</option>
+                                                                    )}
+                                                                </select>
+                                                                <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-gray-500">
+                                                                    <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" /></svg>
+                                                                </div>
+                                                            </div>
+                                                        ) : h === 'Part Snap' ? (
+                                                            <div className="relative">
+                                                                <input
+                                                                    type="file"
+                                                                    accept="image/*"
+                                                                    className="w-full px-3.5 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:border-tata-blue focus:ring-2 focus:ring-tata-blue/20 text-sm bg-gray-50 focus:bg-white shadow-sm transition-all hover:border-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-tata-light file:text-tata-blue hover:file:bg-tata-blue/10"
+                                                                    onChange={async (e) => {
+                                                                        const file = e.target.files?.[0];
+                                                                        if (file) {
+                                                                            const toastId = toast.loading('Uploading image...');
+                                                                            const fileData = new FormData();
+                                                                            fileData.append('file', file);
+                                                                            try {
+                                                                                const res = await fetch('/api/upload', {
+                                                                                    method: 'POST',
+                                                                                    body: fileData
+                                                                                });
+                                                                                const data = await res.json();
+                                                                                if (res.ok) {
+                                                                                    handleInputChange(h, data.url);
+                                                                                    toast.success('Image uploaded successfully!', { id: toastId });
+                                                                                } else {
+                                                                                    toast.error(data.error || 'Failed to upload image.', { id: toastId });
+                                                                                }
+                                                                            } catch (err) {
+                                                                                console.error(err);
+                                                                                toast.error('Error uploading image.', { id: toastId });
+                                                                            }
+                                                                        }
+                                                                    }}
+                                                                />
+                                                                {formData[h] && (
+                                                                    <div className="absolute right-2 top-1/2 -translate-y-1/2">
+                                                                        <CheckCircle2 className="w-5 h-5 text-emerald-500" />
+                                                                    </div>
+                                                                )}
+                                                                {formData[h] && (
+                                                                    <div className="mt-3">
+                                                                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                                                                        <img src={formData[h]} alt="Part Snap Preview" className="w-full max-h-48 object-contain rounded-md border border-gray-200 bg-gray-50 p-1" />
+                                                                    </div>
+                                                                )}
+                                                            </div>
+                                                        ) : (
+                                                            <input
+                                                                type="text"
+                                                                placeholder={`Enter ${h.toLowerCase()}...`}
+                                                                className="w-full px-3.5 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:border-tata-blue focus:ring-2 focus:ring-tata-blue/20 text-sm bg-gray-50 focus:bg-white shadow-sm transition-all hover:border-gray-400"
                                                                 value={formData[h] || ''}
                                                                 onChange={(e) => handleInputChange(h, e.target.value)}
-                                                            >
-                                                                <option value="" disabled className="text-gray-400">Select {h.toLowerCase()}</option>
-                                                                {DROPDOWN_OPTIONS[h].map((opt, idx) => (
-                                                                    <option key={idx} value={opt}>{opt}</option>
-                                                                ))}
-                                                                {formData[h] && !DROPDOWN_OPTIONS[h].includes(formData[h]) && (
-                                                                    <option value={formData[h]} className="text-tata-blue font-bold italic">{formData[h]} (Auto)</option>
-                                                                )}
-                                                            </select>
-                                                            <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-gray-500">
-                                                                <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" /></svg>
-                                                            </div>
-                                                        </div>
-                                                    ) : h === 'Part Snap' ? (
-                                                        <div className="relative">
-                                                            <input
-                                                                type="file"
-                                                                accept="image/*"
-                                                                className="w-full px-3.5 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:border-tata-blue focus:ring-2 focus:ring-tata-blue/20 text-sm bg-gray-50 focus:bg-white shadow-sm transition-all hover:border-gray-400 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-tata-light file:text-tata-blue hover:file:bg-tata-blue/10"
-                                                                onChange={async (e) => {
-                                                                    const file = e.target.files?.[0];
-                                                                    if (file) {
-                                                                        const toastId = toast.loading('Uploading image...');
-                                                                        const fileData = new FormData();
-                                                                        fileData.append('file', file);
-                                                                        try {
-                                                                            const res = await fetch('/api/upload', {
-                                                                                method: 'POST',
-                                                                                body: fileData
-                                                                            });
-                                                                            const data = await res.json();
-                                                                            if (res.ok) {
-                                                                                handleInputChange(h, data.url);
-                                                                                toast.success('Image uploaded successfully!', { id: toastId });
-                                                                            } else {
-                                                                                toast.error(data.error || 'Failed to upload image.', { id: toastId });
-                                                                            }
-                                                                        } catch (err) {
-                                                                            console.error(err);
-                                                                            toast.error('Error uploading image.', { id: toastId });
-                                                                        }
-                                                                    }
-                                                                }}
                                                             />
-                                                            {formData[h] && (
-                                                                <div className="absolute right-2 top-1/2 -translate-y-1/2">
-                                                                    <CheckCircle2 className="w-5 h-5 text-emerald-500" />
-                                                                </div>
-                                                            )}
-                                                            {formData[h] && (
-                                                                <div className="mt-3">
-                                                                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                                                                    <img src={formData[h]} alt="Part Snap Preview" className="w-full max-h-48 object-contain rounded-md border border-gray-200 bg-gray-50 p-1" />
-                                                                </div>
-                                                            )}
-                                                        </div>
-                                                    ) : (
-                                                        <input
-                                                            type="text"
-                                                            placeholder={`Enter ${h.toLowerCase()}...`}
-                                                            className="w-full px-3.5 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:border-tata-blue focus:ring-2 focus:ring-tata-blue/20 text-sm bg-gray-50 focus:bg-white shadow-sm transition-all hover:border-gray-400"
-                                                            value={formData[h] || ''}
-                                                            onChange={(e) => handleInputChange(h, e.target.value)}
-                                                        />
-                                                    )}
-                                                </div>
-                                            ))}
+                                                        )}
+                                                    </div>
+                                                );
+                                            })}
                                         </div>
                                     </div>
                                 </div>
