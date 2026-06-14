@@ -1,8 +1,9 @@
 export const FIELD_GROUPS: Record<string, string[]> = {
-  "General": [
+  "General Info": [
     "Project Name",
     "Enter Module",
-    "Enter Module Name"
+    "Enter Module Name",
+    "Unit"
   ],
   "Part Details": [
     "Part Description",
@@ -16,8 +17,8 @@ export const FIELD_GROUPS: Record<string, string[]> = {
     "SAP RM MM Code",
     "RM material Type",
     "RM Input Type",
-    "Material Spec Mentioned",
     "Alloy",
+    "Material Spec Mentioned",
     "Initial Temper",
     "Final Temper",
     "RM Sheet Length (mm)",
@@ -32,21 +33,25 @@ export const FIELD_GROUPS: Record<string, string[]> = {
     "Engg Part Number",
     "Synthetic Part No.",
     "Part Scope",
+    "Functional Class Applicability",
     "Functional Class  (As per COS model Properties)",
     "Class Description  (As per DGQT 0.2.0.0001A)",
+    "Mfg Code Applicability",
     "Mfg Code ST10804   (As per COS model Properties)",
     "Mfg Code Description as per ST10804 sec-2.1",
+    "Process Code Applicability",
     "Process Code   (As per COS model Properties)",
     "Process code Description as per  ST10805  (Reference from ST10804 sec-2)",
     "Finish part Length (mm)",
     "Finish part width (mm)",
     "Part  Complexity",
-    "Hole engg Requirement (As per COS)",
-    "Chamfer",
+    "Total No. of holes",
+    "Special features",
     "Part Family's",
     "Major Fabrication Technology"
   ],
   "Base Matrix Sheet": [
+    "Base Matrix Applicability",
     "Nos of Bends",
     "Type of Part (Flat , Formed)",
     "Type of Forming (Hot forming, Cold Forming)",
@@ -57,7 +62,8 @@ export const FIELD_GROUPS: Record<string, string[]> = {
     "Type of Raw material",
     "Part Thickness (min, mm)",
     "GD&T — Hole Position",
-    "GD&T — Form & Profile Controls"
+    "GD&T — Form & Profile Controls",
+    "Base Matrix Total Score"
   ],
   "Special Process Details": [
     "Protection Code",

@@ -1,8 +1,9 @@
 export const DROPDOWN_OPTIONS: Record<string, string[]> = {
     // YES/NO options
+    "Unit": ["Inch", "MM"],
     "Enter Module": ["Yes", "No"],
     "Heat Treatment Applicability": ["Yes", "No"],
-    "Chamfer": ["Yes", "No", "NO"],
+    "Special features": ["Chamfer", "Fillet", "Csk", "Counter bore", "Drain hole"],
     "Conductivity Test": ["Yes", "No"],
     "Chemical Milling": ["Yes", "No"],
     "Welding": ["Yes", "No"],
@@ -18,17 +19,27 @@ export const DROPDOWN_OPTIONS: Record<string, string[]> = {
     "Topcoat": ["Yes", "No"],
     "Plastic Coating": ["Yes", "No"],
     "No Protection": ["Yes", "No"],
+    "Functional Class Applicability": ["Yes", "No"],
+    "Mfg Code Applicability": ["Yes", "No"],
+    "Process Code Applicability": ["Yes", "No"],
+    "EQN": ["Yes", "No"],
+    "Base Matrix Applicability": ["Yes", "No"],
 
     // From PPT
+    "Total No. of holes": [
+        "Enter Total no. Of finish hole.",
+        "Total no of pilot/Pre drilled hole.",
+        "Total No. Of coordination/ Tooling hole."
+    ],
     "Part Category": ["SKN - Skin", "FRM - Frame", "RIB - Rib", "SPR - Spar", "STR - Stringer", "BRK - Bracket", "FIT - Fitting", "FAR - Fairings", "BEM - Beam", "DOR - Door", "SUP - Support", "WPL - Wing Panels", "SHM - Shims", "ANG - Angles", "INC - Intercostals", "CLP - Clip", "DOU - Doubler", "Detail Part", "Assembly", "Sub-Assembly"],
-    "RM material Type": ["AL - Aluminium", "1000 Series", "2000 Series", "3000 Series", "4000 Series", "5000 Series", "6000 Series", "7000 Series", "Titanium", "Steel"],
+    "RM material Type": ["Inconel", "Aluminium", "Titanium", "Steel", "Copper"],
     "Alloy": ["2024PL", "AL - Aluminium", "1000 Series", "2000 Series", "3000 Series", "4000 Series", "5000 Series", "6000 Series", "7000 Series", "Titanium", "Steel"],
     "RM Input Type": ["SHT - Sheet", "EX - Extrusion", "TB - Tube", "Sheet", "Plate", "Casting", "Forging"],
     "Part  Complexity": ["5 - Very Complex", "4 - Complex", "3 - Moderate", "2 - Low", "1 - Simple", "Complex"],
     "Part Complexity": ["5 - Very Complex", "4 - Complex", "3 - Moderate", "2 - Low", "1 - Simple"],
-    "Part Scope": ["TASL-N01", "TASL-H01", "TASL-N02", "Dassault Scope"],
-    "Initial Temper": ["F", "O", "H111", "T3", "T4"],
-    "Final Temper ": ["T42", "T62", "T8", "W", "AQ"],
+    "Part Scope": ["TASL-N01", "TASL-H01", "TASL-N02", "Buy Scope"],
+    "Initial Temper": ["F", "O", "H111", "T3", "T4", "Any other"],
+    "Final Temper": ["T3", "T42", "T4", "T72", "T62", "T3511", "T351", "If any"],
     "Part Family's": ["Family 1", "Family 2", "Family 3", "Family 4", "Family 5", "Family 6"],
     "Major Fabrication Technology": ["Hyd Press", "Routing + HT + Hyd Press", "Machining", "5A Machining", "Chemical Milling", "Conventional"],
     "Nos of Bends": ["0", "1-2 (C type)", "1-2 (Z Type)", "3-5", ">5"],
@@ -41,5 +52,11 @@ export const DROPDOWN_OPTIONS: Record<string, string[]> = {
     "Type of Raw material": ["Aluminum Shims", "Aluminum Extrusion , Sheet", "Ti Sheet", "Steel Sheet", "Inconal Sheet"],
     "Part Thickness (min, mm)": ["Up to 0.4 mm", "0.4 - 1.0 mm", "1.0 mm to 1.5 mm", "1.6 mm to 4.0 mm", "> 4.0 mm"],
     "GD&T — Hole Position": ["No GD&T", "Single Datum / tolerance Limit > 0.8mm / No Hole MMC/LLC", "Multiple Datum / Tolerance Limit : 0.6-0.8 mm / No Hole MMC/LLC", "Multiple Datum / Tolerance Limit : 0.6-0.8 mm / Hole with MMC/LLC", "Multiple Datum / Tolerance Limit < 0.6 mm / Hole with MMC/LLC"],
-    "GD&T — Form & Profile Controls": ["No GD&T", "Flatness > 1mm / Profile >1mm / Straight Profile", "Flatness 0.8–1mm / Profile 0.8–1mm / Straight Profile", "Flatness 0.8–1mm / Profile 0.8–1mm / Straight Profile", "Flatness <0.8mm / Profile <0.8 / Free-form contour"]
+    "GD&T — Form & Profile Controls": ["No GD&T", "Flatness > 1mm / Profile >1mm / Straight Profile", "Flatness 0.8–1mm / Profile 0.8–1mm / Straight Profile", "Flatness 0.8–1mm / Profile 0.8–1mm / Straight Profile", "Flatness <0.8mm / Profile <0.8 / Free-form contour"],
+    "Part Marking Code": [
+        "Ink marking",
+        "Level / Bagend tag",
+        "MBos Marking",
+        "Engraved Marking"
+    ]
 };

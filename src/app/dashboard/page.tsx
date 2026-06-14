@@ -8,7 +8,7 @@ import { DROPDOWN_OPTIONS } from '@/lib/dropdowns';
 import { FIELD_GROUPS } from '@/lib/fieldGroups';
 import toast from 'react-hot-toast';
 import { Download, Plus, X, Loader2, Maximize2, Settings2, ChevronRight, ChevronLeft, CheckCircle2 } from 'lucide-react';
-import * as XLSX from 'xlsx';
+import * as XLSX from 'xlsx-js-style';
 
 export default function Dashboard() {
     const router = useRouter();
@@ -71,6 +71,33 @@ export default function Dashboard() {
                 }
             }
 
+            // FUNCTIONAL CLASS Conditional Logic
+            if (field === 'Functional Class Applicability') {
+                if (val === 'Yes') {
+                    next['Functional Class  (As per COS model Properties)'] = ''; // Clear for user to type
+                } else if (val === 'No') {
+                    next['Functional Class  (As per COS model Properties)'] = 'NA'; // Auto-fill
+                }
+            }
+
+            // MFG CODE Conditional Logic
+            if (field === 'Mfg Code Applicability') {
+                if (val === 'Yes') {
+                    next['Mfg Code ST10804   (As per COS model Properties)'] = ''; // Clear for user to type
+                } else if (val === 'No') {
+                    next['Mfg Code ST10804   (As per COS model Properties)'] = 'NA'; // Auto-fill
+                }
+            }
+
+            // PROCESS CODE Conditional Logic
+            if (field === 'Process Code Applicability') {
+                if (val === 'Yes') {
+                    next['Process Code   (As per COS model Properties)'] = ''; // Clear for user to type
+                } else if (val === 'No') {
+                    next['Process Code   (As per COS model Properties)'] = 'NA'; // Auto-fill
+                }
+            }
+
             // The user requested to disable the dependent auto-fill logic:
             // DEPENDENT LOGIC 1: Auto-fill Synthetic Part No
             /*
@@ -95,19 +122,133 @@ export default function Dashboard() {
             */
 
             // DEPENDENT LOGIC 3: Material Concatenation
-            /*
-            if (['Alloy', 'Initial Temper', 'Sheet Thk (mm)', 'RM Sheet Length (mm)', 'RM Sheet Width (mm)'].includes(field)) {
-                const alloy = next['Alloy'] || '';
-                const temper = next['Initial Temper'] || '';
-                const thk = next['Sheet Thk (mm)'] || '';
-                const len = next['RM Sheet Length (mm)'] || '';
-                const wid = next['RM Sheet Width (mm)'] || '';
+            const rmFields = [
+                'RM RAS Code', 'SAP RM MM Code', 'RM material Type', 'RM Input Type',
+                'Alloy', 'Material Spec Mentioned', 'Initial Temper', 'Final Temper',
+                'Sheet Thk (mm)', 'RM Sheet Length (mm)', 'RM Sheet Width (mm)',
+                'Heat Treatment Applicability', 'RM Remark', 'Unit'
+            ];
 
-                if (alloy && thk) {
-                    next['Material with Concatenate'] = `TOLE ${alloy} ETAT=${temper} ${thk} X ${wid} X ${len}`.trim();
+            if (rmFields.includes(field)) {
+                let thkNum = parseFloat(next['Sheet Thk (mm)']) || 0;
+                let lenNum = parseFloat(next['RM Sheet Length (mm)']) || 0;
+                let widNum = parseFloat(next['RM Sheet Width (mm)']) || 0;
+
+                if (next['Unit'] === 'Inch') {
+                    thkNum = Number((thkNum * 25.4).toFixed(3));
+                    lenNum = Number((lenNum * 25.4).toFixed(3));
+                    widNum = Number((widNum * 25.4).toFixed(3));
+                }
+
+                const partsToJoin = [
+                    next['RM RAS Code'],
+                    next['SAP RM MM Code'],
+                    next['RM material Type'],
+                    next['RM Input Type'],
+                    next['Alloy'],
+                    next['Material Spec Mentioned'],
+                    next['Initial Temper'],
+                    next['Final Temper'],
+                    next['Sheet Thk (mm)'] ? `${thkNum}mm(Thk)` : '',
+                    next['RM Sheet Width (mm)'] ? `${widNum}mm(W)` : '',
+                    next['RM Sheet Length (mm)'] ? `${lenNum}mm(L)` : '',
+                    next['Heat Treatment Applicability'],
+                    next['RM Remark']
+                ].filter(Boolean);
+
+                next['Material with Concatenate'] = partsToJoin.join(' / ');
+            }
+
+            // BASE MATRIX SCORING LOGIC
+            const BASE_MATRIX_WEIGHTS: Record<string, number> = {
+                "Nos of Bends": 0.10,
+                "Type of Part (Flat , Formed)": 0.05,
+                "Type of Forming (Hot forming, Cold Forming)": 0.15,
+                "Forming Temper condition (F,H11,O,T,T42,AQ/W)": 0.10,
+                "Type of Bend (Concave, convex, straight)": 0.15,
+                "Joggle (Joggle Depth , Nos of Joggle , Joggle ratio)": 0.10,
+                "Thickness Mill (Chemical Mill , Mechanical Mill , Nos of Pockets)": 0.10,
+                "Type of Raw material": 0.10,
+                "Part Thickness (min, mm)": 0.05,
+                "GD&T — Hole Position": 0.05,
+                "GD&T — Form & Profile Controls": 0.05
+            };
+            const BASE_MATRIX_SCORE_KEYS: Record<string, string> = {
+                "Nos of Bends": "Nos of Bends Score",
+                "Type of Part (Flat , Formed)": "Type of Part Score",
+                "Type of Forming (Hot forming, Cold Forming)": "Type of Forming Score",
+                "Forming Temper condition (F,H11,O,T,T42,AQ/W)": "Forming Temper condition Score",
+                "Type of Bend (Concave, convex, straight)": "Type of Bend Score",
+                "Joggle (Joggle Depth , Nos of Joggle , Joggle ratio)": "Joggle Score",
+                "Thickness Mill (Chemical Mill , Mechanical Mill , Nos of Pockets)": "Thickness Mill Score",
+                "Type of Raw material": "Type of Raw material Score",
+                "Part Thickness (min, mm)": "Part Thickness Score",
+                "GD&T — Hole Position": "GD&T Hole Position Score",
+                "GD&T — Form & Profile Controls": "GD&T Form & Profile Controls Score"
+            };
+
+            if (field === 'Base Matrix Applicability') {
+                if (val === 'No') {
+                    for (const k of Object.keys(BASE_MATRIX_WEIGHTS)) {
+                        next[k] = 'NA';
+                        next[BASE_MATRIX_SCORE_KEYS[k]] = 'NA';
+                    }
+                    next['Base Matrix Total Score'] = 'NA';
+                } else if (val === 'Yes') {
+                    for (const k of Object.keys(BASE_MATRIX_WEIGHTS)) {
+                        if (next[k] === 'NA') next[k] = '';
+                        if (next[BASE_MATRIX_SCORE_KEYS[k]] === 'NA') next[BASE_MATRIX_SCORE_KEYS[k]] = '';
+                    }
+                    next['Base Matrix Total Score'] = '';
                 }
             }
-            */
+
+            const baseMatrixKeys = Object.keys(BASE_MATRIX_WEIGHTS);
+            if (baseMatrixKeys.includes(field)) {
+                let totalScore = 0;
+                let isValid = false;
+                for (const key of baseMatrixKeys) {
+                    const mappedVal = next[key];
+                    if (mappedVal && DROPDOWN_OPTIONS[key]) {
+                        const score = DROPDOWN_OPTIONS[key].indexOf(mappedVal) + 1;
+                        if (score > 0) {
+                            next[BASE_MATRIX_SCORE_KEYS[key]] = score.toString();
+                            totalScore += score * BASE_MATRIX_WEIGHTS[key];
+                            isValid = true;
+                        } else {
+                            next[BASE_MATRIX_SCORE_KEYS[key]] = '';
+                        }
+                    }
+                }
+                if (isValid) {
+                    next['Base Matrix Total Score'] = totalScore.toFixed(3);
+                }
+            }
+
+            // FAMILY CODE Conditional Logic
+            if (['Part Category', 'RM material Type', 'RM Input Type', 'Finish part Length (mm)', 'Finish part width (mm)', 'Part  Complexity', 'Unit'].includes(field)) {
+                const type = next['Part Category']?.split(' - ')[0] || '';
+                const mat = next['RM material Type']?.split(' - ')[0] || '';
+                const form = next['RM Input Type']?.split(' - ')[0] || '';
+                const comp = next['Part  Complexity']?.split(' - ')[0] || '';
+
+                const lengthVal = parseFloat(next['Finish part Length (mm)']) || 0;
+                const widthVal = parseFloat(next['Finish part width (mm)']) || 0;
+                let maxDim = Math.max(lengthVal, widthVal);
+                if (next['Unit'] === 'Inch') maxDim *= 25.4;
+
+                let size = '';
+                if (maxDim > 1800) size = 'XL';
+                else if (maxDim >= 800) size = 'L';
+                else if (maxDim >= 300) size = 'M';
+                else if (maxDim >= 100) size = 'S';
+                else if (maxDim > 0) size = 'XS';
+
+                const parts = [type, mat, form, size, comp].filter(Boolean);
+                if (parts.length > 0) {
+                    next["Part Family's"] = parts.join('-');
+                }
+            }
 
             return next;
         });
@@ -173,16 +314,25 @@ export default function Dashboard() {
             return;
         }
 
-        // Build Header Rows setup similar to the original Excel
-        const row0: string[] = [];
-        const row1: string[] = [];
-        const row2: string[] = PFM_HEADERS;
+        const row0 = [];
+        const row1 = [];
+        const row2 = [];
         const merges: XLSX.Range[] = [];
 
         let col0 = 0;
         SUPER_HEADERS.forEach(sh => {
-            row0.push(sh.name);
-            for (let i = 1; i < sh.colSpan; i++) row0.push('');
+            const cell = {
+                v: sh.name,
+                t: 's',
+                s: {
+                    font: { bold: true, color: { rgb: "000000" }, sz: 12 },
+                    fill: { fgColor: { rgb: sh.color || "DDEBF7" } },
+                    alignment: { horizontal: "center", vertical: "center", wrapText: true },
+                    border: { top: { style: "thin" }, bottom: { style: "thin" }, left: { style: "thin" }, right: { style: "thin" } }
+                }
+            };
+            row0.push(cell);
+            for (let i = 1; i < sh.colSpan; i++) row0.push({ v: '', s: cell.s });
             if (sh.colSpan > 1) {
                 merges.push({ s: { r: 0, c: col0 }, e: { r: 0, c: col0 + sh.colSpan - 1 } });
             }
@@ -191,29 +341,86 @@ export default function Dashboard() {
 
         let col1 = 0;
         SUB_HEADERS.forEach(sh => {
-            row1.push(sh.name);
-            for (let i = 1; i < sh.colSpan; i++) row1.push('');
+            const cell = {
+                v: sh.name,
+                t: 's',
+                s: {
+                    font: { bold: true, color: { rgb: "000000" }, sz: 11 },
+                    fill: { fgColor: { rgb: sh.color || "E2EFDA" } },
+                    alignment: { horizontal: "center", vertical: "center", wrapText: true },
+                    border: { top: { style: "thin" }, bottom: { style: "thin" }, left: { style: "thin" }, right: { style: "thin" } }
+                }
+            };
+            row1.push(cell);
+            for (let i = 1; i < sh.colSpan; i++) row1.push({ v: '', s: cell.s });
             if (sh.colSpan > 1) {
                 merges.push({ s: { r: 1, c: col1 }, e: { r: 1, c: col1 + sh.colSpan - 1 } });
             }
             col1 += sh.colSpan;
         });
 
-        // Create a rows array mapped from the database based on headers
+        PFM_HEADERS.forEach((header, index) => {
+            let matchedColor = "FFFFFF";
+            let cSpanFound = 0;
+            for (let j = 0; j < SUB_HEADERS.length; j++) {
+                cSpanFound += SUB_HEADERS[j].colSpan;
+                if (index < cSpanFound) {
+                    matchedColor = SUB_HEADERS[j].color || "FFFFFF";
+                    break;
+                }
+            }
+
+            const cell = {
+                v: header,
+                t: 's',
+                s: {
+                    font: { bold: true, sz: 10 },
+                    fill: { fgColor: { rgb: matchedColor } },
+                    alignment: { horizontal: "center", vertical: "center", wrapText: true },
+                    border: { top: { style: "thin" }, bottom: { style: "thin" }, left: { style: "thin" }, right: { style: "thin" } }
+                }
+            };
+            row2.push(cell);
+        });
+
         const dataRows = data.map((item: any, idx) => {
             const rowArr: any[] = [];
-            PFM_HEADERS.forEach(header => {
+            PFM_HEADERS.forEach((header, index) => {
+                let cellVal = '';
                 if (header.includes('SR') && header.includes('NO')) {
-                    rowArr.push(idx + 1);
+                    cellVal = (idx + 1).toString();
                 } else {
-                    rowArr.push(item.data?.[header] || '');
+                    cellVal = item.data?.[header] || '';
                 }
+
+                let matchedColor = "FFFFFF";
+                let cSpanFound = 0;
+                for (let j = 0; j < SUB_HEADERS.length; j++) {
+                    cSpanFound += SUB_HEADERS[j].colSpan;
+                    if (index < cSpanFound) {
+                        matchedColor = SUB_HEADERS[j].color || "FFFFFF";
+                        break;
+                    }
+                }
+
+                rowArr.push({
+                    v: cellVal,
+                    t: 's',
+                    s: {
+                        fill: { fgColor: { rgb: matchedColor } },
+                        alignment: { horizontal: "center", vertical: "center", wrapText: true },
+                        border: { top: { style: "thin" }, bottom: { style: "thin" }, left: { style: "thin" }, right: { style: "thin" } }
+                    }
+                });
             });
             return rowArr;
         });
 
         const finalAoa = [row0, row1, row2, ...dataRows];
         const worksheet = XLSX.utils.aoa_to_sheet(finalAoa);
+
+        const wscols = PFM_HEADERS.map(() => ({ wch: 22 }));
+        worksheet['!cols'] = wscols;
         worksheet['!merges'] = merges;
 
         const workbook = XLSX.utils.book_new();
@@ -323,7 +530,7 @@ export default function Dashboard() {
                         <div className="flex justify-between items-center px-6 py-4 border-b bg-gray-50/80">
                             <div className="flex-1">
                                 <h2 className="text-xl font-bold text-tata-dark flex items-center gap-3">
-                                    Engineering PSM
+                                    Engineering PFM
                                     <span className="text-xs font-semibold px-2.5 py-1 bg-tata-light text-tata-blue rounded-full">
                                         Step {currentIdx + 1} of {groupKeys.length}
                                     </span>
@@ -382,15 +589,51 @@ export default function Dashboard() {
                                     </div>
 
                                     <div className="mb-2 animate-in slide-in-from-right-4 duration-300">
-                                        <h3 className="text-2xl font-bold text-gray-800 border-b pb-2 mb-6 border-gray-100">{activeTab} Info</h3>
+                                        <h3 className="text-2xl font-bold text-gray-800 border-b pb-2 mb-6 border-gray-100">{activeTab === 'General Info' ? 'PFM Configuration' : `${activeTab} Info`}</h3>
                                         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-x-6 gap-y-6">
                                             {FIELD_GROUPS[activeTab]?.map((h, i) => {
                                                 // Conditionally hide Enter Module Name if Enter Module is not Yes
                                                 if (h === 'Enter Module Name' && formData['Enter Module'] !== 'Yes') return null;
 
+                                                // Conditionally hide Functional Class if Applicability is not Yes
+                                                if (h === 'Functional Class  (As per COS model Properties)' && formData['Functional Class Applicability'] !== 'Yes') return null;
+
+                                                // Conditionally hide Mfg Code if Applicability is not Yes
+                                                if (h === 'Mfg Code ST10804   (As per COS model Properties)' && formData['Mfg Code Applicability'] !== 'Yes') return null;
+
+                                                // Conditionally hide Process Code if Applicability is not Yes
+                                                if (h === 'Process Code   (As per COS model Properties)' && formData['Process Code Applicability'] !== 'Yes') return null;
+
+                                                // Conditionally hide Base Matrix items if Applicability is not Yes
+                                                const baseMatrixFields = [
+                                                    "Nos of Bends",
+                                                    "Type of Part (Flat , Formed)",
+                                                    "Type of Forming (Hot forming, Cold Forming)",
+                                                    "Forming Temper condition (F,H11,O,T,T42,AQ/W)",
+                                                    "Type of Bend (Concave, convex, straight)",
+                                                    "Joggle (Joggle Depth , Nos of Joggle , Joggle ratio)",
+                                                    "Thickness Mill (Chemical Mill , Mechanical Mill , Nos of Pockets)",
+                                                    "Type of Raw material",
+                                                    "Part Thickness (min, mm)",
+                                                    "GD&T — Hole Position",
+                                                    "GD&T — Form & Profile Controls",
+                                                    "Base Matrix Total Score"
+                                                ];
+                                                if (baseMatrixFields.includes(h) && formData['Base Matrix Applicability'] !== 'Yes') return null;
+
+                                                const renderLabel = (headerName: string) => {
+                                                    let label = headerName;
+                                                    const unit = formData['Unit'] || 'mm';
+                                                    if (label.includes('(mm)')) label = label.replace(/\(mm\)/g, `(${unit.toLowerCase()})`);
+                                                    if (label.includes('(MM)')) label = label.replace(/\(MM\)/g, `(${unit.toUpperCase()})`);
+                                                    if (label.includes('(min, mm)')) label = label.replace(/\(min, mm\)/g, `(min, ${unit.toLowerCase()})`);
+                                                    return label;
+                                                };
+                                                const displayLabel = renderLabel(h);
+
                                                 return (
                                                     <div key={i} className="flex flex-col group">
-                                                        <label className="text-xs font-bold text-tata-dark mb-1.5 uppercase tracking-wide truncate" title={h}>{h}</label>
+                                                        <label className="text-xs font-bold text-tata-dark mb-1.5 uppercase tracking-wide truncate" title={displayLabel}>{displayLabel}</label>
                                                         {DROPDOWN_OPTIONS[h] ? (
                                                             <div className="relative">
                                                                 <select
@@ -398,7 +641,7 @@ export default function Dashboard() {
                                                                     value={formData[h] || ''}
                                                                     onChange={(e) => handleInputChange(h, e.target.value)}
                                                                 >
-                                                                    <option value="" disabled className="text-gray-400">Select {h.toLowerCase()}</option>
+                                                                    <option value="" disabled className="text-gray-400">Select {displayLabel.toLowerCase()}</option>
                                                                     {DROPDOWN_OPTIONS[h].map((opt, idx) => (
                                                                         <option key={idx} value={opt}>{opt}</option>
                                                                     ))}
@@ -456,10 +699,11 @@ export default function Dashboard() {
                                                         ) : (
                                                             <input
                                                                 type="text"
-                                                                placeholder={`Enter ${h.toLowerCase()}...`}
-                                                                className="w-full px-3.5 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:border-tata-blue focus:ring-2 focus:ring-tata-blue/20 text-sm bg-gray-50 focus:bg-white shadow-sm transition-all hover:border-gray-400"
+                                                                placeholder={`Enter ${displayLabel.toLowerCase()}...`}
+                                                                className={`w-full px-3.5 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:border-tata-blue focus:ring-2 focus:ring-tata-blue/20 text-sm shadow-sm transition-all ${h === 'Base Matrix Total Score' ? 'bg-gray-100 cursor-not-allowed font-bold text-tata-blue' : 'bg-gray-50 focus:bg-white hover:border-gray-400'}`}
                                                                 value={formData[h] || ''}
                                                                 onChange={(e) => handleInputChange(h, e.target.value)}
+                                                                disabled={h === 'Base Matrix Total Score'}
                                                             />
                                                         )}
                                                     </div>
