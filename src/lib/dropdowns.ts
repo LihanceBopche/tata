@@ -27,9 +27,9 @@ export const DROPDOWN_OPTIONS: Record<string, string[]> = {
 
     // From PPT
     "Total No. of holes": [
-        "Enter Total no. Of finish hole.",
-        "Total no of pilot/Pre drilled hole.",
-        "Total No. Of coordination/ Tooling hole."
+        "Finish Holes",
+        "Pilot/Pre-drilled Holes",
+        "Coordination/Tooling Holes"
     ],
     "Part Category": ["SKN - Skin", "FRM - Frame", "RIB - Rib", "SPR - Spar", "STR - Stringer", "BRK - Bracket", "FIT - Fitting", "FAR - Fairings", "BEM - Beam", "DOR - Door", "SUP - Support", "WPL - Wing Panels", "SHM - Shims", "ANG - Angles", "INC - Intercostals", "CLP - Clip", "DOU - Doubler", "Detail Part", "Assembly", "Sub-Assembly"],
     "RM material Type": ["Inconel", "Aluminium", "Titanium", "Steel", "Copper"],

@@ -98,6 +98,17 @@ export default function Dashboard() {
                 }
             }
 
+            // HOLES Conditional Logic
+            if (field === 'Total No. of holes') {
+                const allHoleInputs = ['Total No. of Finish Holes', 'Total No. of Pilot/Pre-drilled Holes', 'Total No. of Coordination/Tooling Holes'];
+                allHoleInputs.forEach(h => {
+                    next[h] = 'NA';
+                });
+                if (val === 'Finish Holes') next['Total No. of Finish Holes'] = '';
+                if (val === 'Pilot/Pre-drilled Holes') next['Total No. of Pilot/Pre-drilled Holes'] = '';
+                if (val === 'Coordination/Tooling Holes') next['Total No. of Coordination/Tooling Holes'] = '';
+            }
+
             // The user requested to disable the dependent auto-fill logic:
             // DEPENDENT LOGIC 1: Auto-fill Synthetic Part No
             /*
@@ -603,6 +614,11 @@ export default function Dashboard() {
 
                                                 // Conditionally hide Process Code if Applicability is not Yes
                                                 if (h === 'Process Code   (As per COS model Properties)' && formData['Process Code Applicability'] !== 'Yes') return null;
+
+                                                // Conditionally hide Total No. of holes inputs
+                                                if (h === 'Total No. of Finish Holes' && formData['Total No. of holes'] !== 'Finish Holes') return null;
+                                                if (h === 'Total No. of Pilot/Pre-drilled Holes' && formData['Total No. of holes'] !== 'Pilot/Pre-drilled Holes') return null;
+                                                if (h === 'Total No. of Coordination/Tooling Holes' && formData['Total No. of holes'] !== 'Coordination/Tooling Holes') return null;
 
                                                 // Conditionally hide Base Matrix items if Applicability is not Yes
                                                 const baseMatrixFields = [

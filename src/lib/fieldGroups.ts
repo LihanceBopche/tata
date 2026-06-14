@@ -46,6 +46,9 @@ export const FIELD_GROUPS: Record<string, string[]> = {
     "Finish part width (mm)",
     "Part  Complexity",
     "Total No. of holes",
+    "Total No. of Finish Holes",
+    "Total No. of Pilot/Pre-drilled Holes",
+    "Total No. of Coordination/Tooling Holes",
     "Special features",
     "Part Family's",
     "Major Fabrication Technology"
