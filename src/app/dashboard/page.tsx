@@ -200,17 +200,28 @@ export default function Dashboard() {
 
             if (field === 'Base Matrix Applicability') {
                 if (val === 'No') {
+                    // Ensure we clear out old criteria keys if No
                     for (const k of Object.keys(BASE_MATRIX_WEIGHTS)) {
                         next[k] = 'NA';
                         next[BASE_MATRIX_SCORE_KEYS[k]] = 'NA';
+                        next[`${k} Criteria Weight`] = 'NA';
+                        next[`${k} Weighted Score`] = 'NA';
                     }
                     next['Base Matrix Total Score'] = 'NA';
+                    next['Family Name'] = 'NA';
+                    next['Part Family Code'] = 'NA';
+                    next['Feature Score'] = 'NA';
                 } else if (val === 'Yes') {
                     for (const k of Object.keys(BASE_MATRIX_WEIGHTS)) {
                         if (next[k] === 'NA') next[k] = '';
                         if (next[BASE_MATRIX_SCORE_KEYS[k]] === 'NA') next[BASE_MATRIX_SCORE_KEYS[k]] = '';
+                        next[`${k} Criteria Weight`] = `${BASE_MATRIX_WEIGHTS[k] * 100}%`;
+                        if (next[`${k} Weighted Score`] === 'NA') next[`${k} Weighted Score`] = '';
                     }
                     next['Base Matrix Total Score'] = '';
+                    if (next['Family Name'] === 'NA') next['Family Name'] = '';
+                    if (next['Part Family Code'] === 'NA') next['Part Family Code'] = '';
+                    if (next['Feature Score'] === 'NA') next['Feature Score'] = '';
                 }
             }
 
@@ -220,14 +231,20 @@ export default function Dashboard() {
                 let isValid = false;
                 for (const key of baseMatrixKeys) {
                     const mappedVal = next[key];
+                    if (next['Base Matrix Applicability'] === 'Yes') {
+                        next[`${key} Criteria Weight`] = `${BASE_MATRIX_WEIGHTS[key] * 100}%`;
+                    }
                     if (mappedVal && DROPDOWN_OPTIONS[key]) {
                         const score = DROPDOWN_OPTIONS[key].indexOf(mappedVal) + 1;
                         if (score > 0) {
+                            const weighted = score * BASE_MATRIX_WEIGHTS[key];
                             next[BASE_MATRIX_SCORE_KEYS[key]] = score.toString();
-                            totalScore += score * BASE_MATRIX_WEIGHTS[key];
+                            next[`${key} Weighted Score`] = weighted.toFixed(2);
+                            totalScore += weighted;
                             isValid = true;
                         } else {
                             next[BASE_MATRIX_SCORE_KEYS[key]] = '';
+                            next[`${key} Weighted Score`] = '';
                         }
                     }
                 }
@@ -236,12 +253,12 @@ export default function Dashboard() {
                 }
             }
 
-            // FAMILY CODE Conditional Logic
-            if (['Part Category', 'RM material Type', 'RM Input Type', 'Finish part Length (mm)', 'Finish part width (mm)', 'Part  Complexity', 'Unit'].includes(field)) {
-                const type = next['Part Category']?.split(' - ')[0] || '';
-                const mat = next['RM material Type']?.split(' - ')[0] || '';
+            // PART FAMILY CODE Conditional Logic
+            if (['Family Name', 'Alloy', 'RM Input Type', 'Finish part Length (mm)', 'Finish part width (mm)', 'Feature Score', 'Unit'].includes(field)) {
+                const type = next['Family Name']?.split(' - ')[0] || '';
+                const mat = next['Alloy']?.split(' - ')[0] || '';
                 const form = next['RM Input Type']?.split(' - ')[0] || '';
-                const comp = next['Part  Complexity']?.split(' - ')[0] || '';
+                const comp = next['Feature Score']?.split(' - ')[0] || '';
 
                 const lengthVal = parseFloat(next['Finish part Length (mm)']) || 0;
                 const widthVal = parseFloat(next['Finish part width (mm)']) || 0;
@@ -257,7 +274,9 @@ export default function Dashboard() {
 
                 const parts = [type, mat, form, size, comp].filter(Boolean);
                 if (parts.length > 0) {
-                    next["Part Family's"] = parts.join('-');
+                    next["Part Family Code"] = parts.join('-');
+                } else {
+                    next["Part Family Code"] = '';
                 }
             }
 
@@ -606,15 +625,6 @@ export default function Dashboard() {
                                                 // Conditionally hide Enter Module Name if Enter Module is not Yes
                                                 if (h === 'Enter Module Name' && formData['Enter Module'] !== 'Yes') return null;
 
-                                                // Conditionally hide Functional Class if Applicability is not Yes
-                                                if (h === 'Functional Class  (As per COS model Properties)' && formData['Functional Class Applicability'] !== 'Yes') return null;
-
-                                                // Conditionally hide Mfg Code if Applicability is not Yes
-                                                if (h === 'Mfg Code ST10804   (As per COS model Properties)' && formData['Mfg Code Applicability'] !== 'Yes') return null;
-
-                                                // Conditionally hide Process Code if Applicability is not Yes
-                                                if (h === 'Process Code   (As per COS model Properties)' && formData['Process Code Applicability'] !== 'Yes') return null;
-
                                                 // Conditionally hide Total No. of holes inputs
                                                 if (h === 'Total No. of Finish Holes' && formData['Total No. of holes'] !== 'Finish Holes') return null;
                                                 if (h === 'Total No. of Pilot/Pre-drilled Holes' && formData['Total No. of holes'] !== 'Pilot/Pre-drilled Holes') return null;
@@ -622,6 +632,9 @@ export default function Dashboard() {
 
                                                 // Conditionally hide Base Matrix items if Applicability is not Yes
                                                 const baseMatrixFields = [
+                                                    "Feature Score",
+                                                    "Family Name",
+                                                    "Part Family Code",
                                                     "Nos of Bends",
                                                     "Type of Part (Flat , Formed)",
                                                     "Type of Forming (Hot forming, Cold Forming)",

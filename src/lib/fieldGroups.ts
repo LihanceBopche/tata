@@ -29,9 +29,9 @@ export const FIELD_GROUPS: Record<string, string[]> = {
     "RM Remark"
   ],
   "Part Engg Details": [
-    "Part Snap",
     "Engg Part Number",
     "Synthetic Part No.",
+    "Part Snap",
     "Part Scope",
     "Functional Class Applicability",
     "Functional Class  (As per COS model Properties)",
@@ -44,17 +44,17 @@ export const FIELD_GROUPS: Record<string, string[]> = {
     "Process code Description as per  ST10805  (Reference from ST10804 sec-2)",
     "Finish part Length (mm)",
     "Finish part width (mm)",
-    "Part  Complexity",
     "Total No. of holes",
     "Total No. of Finish Holes",
     "Total No. of Pilot/Pre-drilled Holes",
     "Total No. of Coordination/Tooling Holes",
-    "Special features",
-    "Part Family's",
-    "Major Fabrication Technology"
+    "Special features"
   ],
   "Base Matrix Sheet": [
     "Base Matrix Applicability",
+    "Feature Score",
+    "Family Name",
+    "Part Family Code",
     "Nos of Bends",
     "Type of Part (Flat , Formed)",
     "Type of Forming (Hot forming, Cold Forming)",
