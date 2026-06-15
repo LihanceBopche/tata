@@ -467,43 +467,43 @@ export default function Dashboard() {
     const progressPercent = ((currentIdx + 1) / groupKeys.length) * 100;
 
     return (
-        <div className="min-h-screen flex flex-col bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-indigo-50 via-slate-50 to-blue-50">
+        <div className="min-h-screen flex flex-col bg-gray-50 font-sans">
             <Navbar user={user} />
 
-            <main className="flex-1 max-w-[1700px] w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 flex flex-col">
-                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center bg-white/70 backdrop-blur-xl p-6 md:p-8 rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-white/60 mb-8 mt-2 transition-all">
+            <main className="flex-1 max-w-[1700px] w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 flex flex-col">
+                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center bg-white p-5 border-l-4 border-l-tata-blue shadow-sm border-y border-r border-gray-200 mb-6">
                     <div className="flex items-center gap-4 mb-4 sm:mb-0">
-                        <div className="p-3 bg-gradient-to-br from-indigo-500 to-blue-600 rounded-2xl shadow-inner shadow-white/20">
-                            <Settings2 className="w-6 h-6 text-white" />
+                        <div className="p-2 bg-tata-light rounded-sm">
+                            <Settings2 className="w-5 h-5 text-tata-dark" />
                         </div>
                         <div>
-                            <h1 className="text-2xl md:text-3xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-slate-800 to-indigo-800 tracking-tight">Dassault Rafale Lateral Shell PFM</h1>
-                            <p className="text-sm md:text-base text-slate-500 font-medium mt-1">Record and manage aerospace manufacturing data securely</p>
+                            <h1 className="text-2xl font-bold text-tata-dark uppercase tracking-tight">Dassault Rafale Lateral Shell PFM</h1>
+                            <p className="text-xs text-gray-500 font-medium mt-0.5 tracking-wide">ENTERPRISE MANUFACTURING DATA MANAGEMENT</p>
                         </div>
                     </div>
                     <div className="flex gap-3 w-full sm:w-auto">
                         <button
                             onClick={() => { setShowModal(true); setActiveTab(groupKeys[0]); }}
-                            className="flex-1 sm:flex-none bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-6 py-3 rounded-xl hover:shadow-[0_8px_20px_rgb(79,70,229,0.3)] hover:-translate-y-0.5 transition-all duration-300 flex items-center justify-center gap-2 font-bold shadow-md"
+                            className="flex-1 sm:flex-none bg-tata-blue text-white px-5 py-2.5 hover:bg-tata-dark transition-colors duration-200 flex items-center justify-center gap-2 font-bold shadow-sm uppercase text-xs tracking-wider rounded-sm"
                         >
-                            <Plus className="w-5 h-5" /> Add New Record
+                            <Plus className="w-4 h-4" /> Add Record
                         </button>
                         <button
                             onClick={exportToExcel}
-                            className="flex-1 sm:flex-none bg-gradient-to-r from-emerald-500 to-teal-600 text-white px-6 py-3 rounded-xl hover:shadow-[0_8px_20px_rgb(16,185,129,0.3)] hover:-translate-y-0.5 transition-all duration-300 flex items-center justify-center gap-2 font-bold shadow-md"
+                            className="flex-1 sm:flex-none bg-tata-dark text-white px-5 py-2.5 hover:opacity-90 transition-colors duration-200 flex items-center justify-center gap-2 font-bold shadow-sm uppercase text-xs tracking-wider rounded-sm"
                         >
-                            <Download className="w-5 h-5" /> Export DB Sheet
+                            <Download className="w-4 h-4" /> Export DB
                         </button>
                     </div>
                 </div>
 
-                <div className="bg-white/80 backdrop-blur-xl rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-white/60 flex-1 flex flex-col overflow-hidden relative transition-all">
+                <div className="bg-white shadow-sm border border-gray-300 flex-1 flex flex-col overflow-hidden relative">
                     {data.length === 0 ? (
                         <div className="flex-1 flex flex-col items-center justify-center p-12 text-gray-500">
-                            <div className="w-20 h-20 bg-gradient-to-br from-indigo-50 to-blue-50 rounded-full flex items-center justify-center mb-6 shadow-inner ring-1 ring-black/5 animate-pulse-slow">
-                                <Maximize2 className="w-8 h-8 text-indigo-400" />
+                            <div className="w-16 h-16 bg-gray-100 flex items-center justify-center mb-6 border border-gray-200 shadow-sm">
+                                <Maximize2 className="w-6 h-6 text-gray-400" />
                             </div>
-                            <h3 className="text-xl font-bold text-slate-700 mb-2">No Records Found</h3>
+                            <h3 className="text-lg font-bold text-gray-700 mb-2 uppercase tracking-wide">No Records Found</h3>
                             <p className="text-sm mb-4">Click the &quot;Add PFM Record&quot; button to start logging rows.</p>
                         </div>
                     ) : (
@@ -554,24 +554,24 @@ export default function Dashboard() {
 
             {/* Multistep Form Modal */}
             {showModal && (
-                <div className="fixed inset-0 z-[100] bg-slate-900/60 backdrop-blur-md flex items-center justify-center p-4 sm:p-6 lg:p-8 overflow-hidden transition-all duration-300">
-                    <div className="bg-white/95 backdrop-blur-2xl rounded-3xl shadow-[0_20px_60px_rgb(0,0,0,0.15)] border border-white/60 w-full max-w-[1400px] h-auto max-h-[92vh] flex flex-col xl:flex-row animate-in fade-in zoom-in-95 slide-in-from-bottom-8 duration-500 relative overflow-hidden">
+                <div className="fixed inset-0 z-[100] bg-gray-900/80 flex items-center justify-center p-4 sm:p-6 lg:p-8 overflow-hidden transition-all duration-200">
+                    <div className="bg-white shadow-2xl border border-gray-300 w-full max-w-[1400px] h-auto max-h-[92vh] flex flex-col xl:flex-row relative overflow-hidden rounded-sm">
 
-                        <div className="flex justify-between items-center px-6 py-5 border-b border-gray-100 bg-white/50 xl:hidden">
+                        <div className="flex justify-between items-center px-6 py-4 border-b border-gray-200 bg-gray-100 xl:hidden">
                             <div className="flex-1">
-                                <h2 className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-slate-800 to-indigo-800 flex items-center gap-3">
+                                <h2 className="text-lg font-bold text-tata-dark uppercase flex items-center gap-3 tracking-wide">
                                     Engineering Configuration
-                                    <span className="text-xs font-bold px-3 py-1.5 bg-indigo-50 text-indigo-700 rounded-full shadow-sm">
-                                        Step {currentIdx + 1} of {groupKeys.length}
+                                    <span className="text-[10px] font-bold px-2 py-1 bg-tata-blue text-white shadow-sm rounded-sm uppercase tracking-widest">
+                                        Step {currentIdx + 1}/{groupKeys.length}
                                     </span>
                                 </h2>
-                                <div className="mt-2 w-full max-w-sm bg-gray-200 rounded-full h-1.5">
-                                    <div className="bg-tata-blue h-1.5 rounded-full transition-all duration-300" style={{ width: `${progressPercent}%` }}></div>
+                                <div className="mt-3 w-full bg-gray-300 h-1">
+                                    <div className="bg-tata-blue h-1 transition-all duration-300" style={{ width: `${progressPercent}%` }}></div>
                                 </div>
                             </div>
                             <button
                                 onClick={() => setShowModal(false)}
-                                className="w-8 h-8 rounded-full bg-white border border-gray-200 flex items-center justify-center text-gray-500 hover:text-red-500 hover:bg-red-50 hover:border-red-100 transition-colors ml-4 self-start"
+                                className="w-8 h-8 bg-white border border-gray-300 flex items-center justify-center text-gray-600 hover:text-white hover:bg-red-600 transition-colors ml-4 self-start rounded-sm"
                             >
                                 <X className="w-4 h-4" />
                             </button>
@@ -580,28 +580,28 @@ export default function Dashboard() {
                         <form onSubmit={handleFormSubmit} className="flex-1 flex flex-col xl:flex-row overflow-hidden min-h-0">
                             <div className="flex flex-1 flex-col xl:flex-row overflow-hidden">
                                 {/* Sidebar Navigation */}
-                                <div className="w-full xl:w-72 bg-slate-50/50 backdrop-blur-xl border-r border-gray-100 overflow-y-auto hidden md:block custom-scrollbar">
-                                    <div className="px-6 py-6 border-b border-gray-100 hidden xl:block">
-                                        <h2 className="text-xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-slate-800 to-indigo-800 mb-2">PFM Wizard</h2>
-                                        <div className="w-full bg-gray-200/80 rounded-full h-2 shadow-inner">
-                                            <div className="bg-gradient-to-r from-blue-500 to-indigo-600 h-2 rounded-full transition-all duration-500 ease-out" style={{ width: `${progressPercent}%` }}></div>
+                                <div className="w-full xl:w-72 bg-gray-50 border-r border-gray-300 overflow-y-auto hidden md:block custom-scrollbar">
+                                    <div className="px-6 py-6 border-b border-gray-300 hidden xl:block bg-gray-100">
+                                        <h2 className="text-lg font-bold text-tata-dark mb-4 uppercase tracking-wide">PFM Setup</h2>
+                                        <div className="w-full bg-gray-300 h-1.5 shadow-inner">
+                                            <div className="bg-tata-accent h-1.5 transition-all duration-500 ease-out" style={{ width: `${progressPercent}%` }}></div>
                                         </div>
                                     </div>
-                                    <ul className="p-4 space-y-2">
+                                    <ul className="p-0">
                                         {groupKeys.map((group, idx) => (
-                                            <li key={group}>
+                                            <li key={group} className="border-b border-gray-200 last:border-0">
                                                 <button
                                                     type="button"
                                                     onClick={() => setActiveTab(group)}
-                                                    className={`w-full flex items-center justify-between px-4 py-3.5 rounded-xl text-sm font-semibold transition-all duration-300 ${activeTab === group
-                                                        ? 'bg-white shadow-[0_4px_15px_rgb(0,0,0,0.05)] border-l-4 border-indigo-600 text-indigo-700 scale-[1.02]'
+                                                    className={`w-full flex items-center justify-between px-6 py-4 text-xs tracking-wide font-bold uppercase transition-all duration-200 rounded-none ${activeTab === group
+                                                        ? 'bg-tata-blue border-l-4 border-tata-dark text-white'
                                                         : idx < currentIdx
-                                                            ? 'text-indigo-600 hover:bg-white/60 hover:shadow-sm'
-                                                            : 'text-slate-500 hover:bg-slate-200/50 hover:text-slate-700'
+                                                            ? 'text-tata-blue bg-white hover:bg-gray-100'
+                                                            : 'text-gray-500 hover:bg-gray-200/50 hover:text-tata-dark'
                                                         }`}
                                                 >
                                                     {group}
-                                                    {idx < currentIdx && activeTab !== group && <CheckCircle2 className="w-4 h-4 text-emerald-500" />}
+                                                    {idx < currentIdx && activeTab !== group && <CheckCircle2 className={`w-4 h-4 ${activeTab === group ? 'text-white' : 'text-emerald-600'}`} />}
                                                 </button>
                                             </li>
                                         ))}
@@ -609,32 +609,32 @@ export default function Dashboard() {
                                 </div>
 
                                 {/* Form Fields Area */}
-                                <div className="flex-1 flex flex-col overflow-hidden bg-white/70">
+                                <div className="flex-1 flex flex-col overflow-hidden bg-white">
                                     <div className="flex-1 overflow-y-auto p-6 md:p-8 lg:p-10 custom-scrollbar">
-                                        <div className="sm:hidden flex overflow-x-auto gap-2 pb-4 mb-4 border-b border-gray-100 custom-scrollbar">
+                                        <div className="sm:hidden flex overflow-x-auto gap-2 pb-4 mb-4 border-b border-gray-200 custom-scrollbar">
                                             {groupKeys.map(group => (
                                                 <button
                                                     key={group}
                                                     type="button"
                                                     onClick={() => setActiveTab(group)}
-                                                    className={`whitespace-nowrap px-4 py-2 rounded-full text-sm font-semibold transition-all ${activeTab === group ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-md' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'}`}
+                                                    className={`whitespace-nowrap px-4 py-2 text-xs font-bold uppercase transition-all border ${activeTab === group ? 'bg-tata-blue text-white border-tata-blue' : 'bg-gray-50 text-gray-600 border-gray-300 hover:bg-gray-200 rounded-sm'}`}
                                                 >
                                                     {group}
                                                 </button>
                                             ))}
                                         </div>
 
-                                        <div className="mb-2 animate-in slide-in-from-right-8 duration-500 fade-in">
-                                            <div className="flex justify-between items-center border-b border-slate-100 pb-4 mb-8">
-                                                <h3 className="text-2xl font-extrabold flex-1 bg-clip-text text-transparent bg-gradient-to-r from-slate-800 to-slate-600">{activeTab === 'General Info' ? 'General Configuration' : `${activeTab} Data`}</h3>
+                                        <div className="mb-2 animate-in fade-in duration-300">
+                                            <div className="flex justify-between items-center border-b-2 border-tata-dark/10 pb-4 mb-8">
+                                                <h3 className="text-xl font-bold uppercase tracking-wider text-tata-dark">{activeTab === 'General Info' ? 'General Configuration' : `${activeTab} Data`}</h3>
                                                 <button
                                                     onClick={() => setShowModal(false)}
-                                                    className="w-10 h-10 rounded-full bg-white border border-gray-200 flex items-center justify-center text-gray-500 hover:text-red-500 hover:bg-red-50 hover:border-red-100 transition-all shadow-sm hidden xl:flex"
+                                                    className="w-10 h-10 bg-white border border-gray-300 flex items-center justify-center text-gray-500 hover:text-white hover:bg-red-600 transition-all shadow-sm hidden xl:flex hover:border-red-600 rounded-sm"
                                                 >
                                                     <X className="w-5 h-5" />
                                                 </button>
                                             </div>
-                                            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-x-8 gap-y-8">
+                                            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-x-8 gap-y-7">
                                                 {FIELD_GROUPS[activeTab]?.map((h, i) => {
                                                     // Conditionally hide Enter Module Name if Enter Module is not Yes
                                                     if (h === 'Enter Module Name' && formData['Enter Module'] !== 'Yes') return null;
@@ -680,7 +680,7 @@ export default function Dashboard() {
                                                             {DROPDOWN_OPTIONS[h] ? (
                                                                 <div className="relative group/select">
                                                                     <select
-                                                                        className="w-full px-4 py-3 border border-slate-200 rounded-xl focus:outline-none focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 text-sm bg-slate-50/50 hover:bg-white appearance-none shadow-sm transition-all cursor-pointer font-medium text-slate-700"
+                                                                        className="w-full px-4 py-2.5 border border-gray-300 rounded-sm focus:outline-none focus:border-tata-blue focus:ring-1 focus:ring-tata-blue text-sm bg-white hover:border-gray-400 appearance-none shadow-sm transition-all cursor-pointer font-medium text-gray-800"
                                                                         value={formData[h] || ''}
                                                                         onChange={(e) => handleInputChange(h, e.target.value)}
                                                                     >
@@ -689,10 +689,10 @@ export default function Dashboard() {
                                                                             <option key={idx} value={opt}>{opt}</option>
                                                                         ))}
                                                                         {formData[h] && !DROPDOWN_OPTIONS[h].includes(formData[h]) && (
-                                                                            <option value={formData[h]} className="text-indigo-600 font-bold italic">{formData[h]} (Auto)</option>
+                                                                            <option value={formData[h]} className="text-tata-blue font-bold italic">{formData[h]} (Auto)</option>
                                                                         )}
                                                                     </select>
-                                                                    <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-slate-400 group-hover/select:text-indigo-500 transition-colors">
+                                                                    <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-gray-400 group-hover/select:text-tata-blue transition-colors">
                                                                         <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" /></svg>
                                                                     </div>
                                                                 </div>
@@ -743,7 +743,7 @@ export default function Dashboard() {
                                                                 <input
                                                                     type="text"
                                                                     placeholder={`Enter ${displayLabel.toLowerCase()}...`}
-                                                                    className={`w-full px-4 py-3 border border-slate-200 rounded-xl focus:outline-none focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 text-sm shadow-sm transition-all font-medium ${h === 'Base Matrix Total Score' ? 'bg-indigo-50 cursor-not-allowed font-extrabold text-indigo-700 border-indigo-100' : 'bg-slate-50/50 hover:bg-white focus:bg-white hover:border-indigo-300 text-slate-700'}`}
+                                                                    className={`w-full px-4 py-2.5 border rounded-sm focus:outline-none focus:border-tata-blue focus:ring-1 focus:ring-tata-blue text-sm shadow-sm transition-all font-medium ${h === 'Base Matrix Total Score' ? 'bg-gray-100 cursor-not-allowed font-extrabold text-tata-dark border-gray-300' : 'bg-white border-gray-300 hover:border-gray-400 text-gray-800'}`}
                                                                     value={formData[h] || ''}
                                                                     onChange={(e) => handleInputChange(h, e.target.value)}
                                                                     disabled={h === 'Base Matrix Total Score'}
@@ -759,19 +759,19 @@ export default function Dashboard() {
                             </div>
 
                             {/* Wizard Footer */}
-                            <div className="p-6 border-t border-slate-100 bg-white/50 flex justify-between items-center rounded-b-3xl">
+                            <div className="p-5 border-t border-gray-200 bg-gray-100 flex justify-between items-center rounded-b-sm">
                                 <div className="flex gap-3">
-                                    <button type="button" onClick={() => setShowModal(false)} className="px-5 py-2.5 text-sm font-bold text-slate-500 hover:text-slate-800 hover:bg-slate-200/50 rounded-xl transition-colors">
+                                    <button type="button" onClick={() => setShowModal(false)} className="px-5 py-2.5 text-xs font-bold uppercase tracking-wider text-gray-500 hover:text-gray-800 hover:bg-gray-200 rounded-sm transition-colors border border-transparent">
                                         Cancel Process
                                     </button>
                                 </div>
 
-                                <div className="flex gap-4 items-center">
+                                <div className="flex gap-3 items-center">
                                     {!isFirstTab && (
                                         <button
                                             type="button"
                                             onClick={handlePrev}
-                                            className="px-6 py-2.5 bg-white border border-slate-200 text-slate-700 text-sm font-bold rounded-xl hover:bg-slate-50 shadow-sm transition-all flex items-center justify-center gap-2 hover:-translate-x-0.5"
+                                            className="px-6 py-2.5 bg-white border border-gray-300 text-gray-700 text-xs font-bold uppercase tracking-wider rounded-sm hover:bg-gray-50 shadow-sm transition-all flex items-center justify-center gap-2"
                                         >
                                             <ChevronLeft className="w-4 h-4" /> Previous
                                         </button>
@@ -781,7 +781,7 @@ export default function Dashboard() {
                                         <button
                                             type="button"
                                             onClick={handleNext}
-                                            className="px-8 py-2.5 bg-gradient-to-r from-blue-600 to-indigo-600 text-white text-sm font-bold rounded-xl hover:opacity-90 shadow-[0_4px_15px_rgb(79,70,229,0.3)] transition-all flex items-center justify-center gap-2 min-w-[140px] hover:translate-x-0.5"
+                                            className="px-8 py-2.5 bg-tata-accent text-white text-xs font-bold uppercase tracking-wider rounded-sm hover:opacity-90 shadow-sm transition-all flex items-center justify-center gap-2 min-w-[140px]"
                                         >
                                             Save & Next <ChevronRight className="w-4 h-4" />
                                         </button>
@@ -789,7 +789,7 @@ export default function Dashboard() {
                                         <button
                                             type="submit"
                                             disabled={submitting}
-                                            className="px-8 py-2.5 bg-gradient-to-r from-emerald-500 to-teal-600 text-white text-sm font-bold rounded-xl hover:opacity-90 shadow-[0_4px_15px_rgb(16,185,129,0.3)] transition-all flex items-center justify-center gap-2 min-w-[180px] disabled:opacity-70 disabled:cursor-not-allowed hover:-translate-y-0.5"
+                                            className="px-8 py-2.5 bg-tata-dark text-white text-xs font-bold uppercase tracking-wider rounded-sm hover:opacity-90 shadow-sm transition-all flex items-center justify-center gap-2 min-w-[180px] disabled:opacity-70 disabled:cursor-not-allowed"
                                         >
                                             {submitting ? <Loader2 className="w-5 h-5 animate-spin" /> : <><CheckCircle2 className="w-5 h-5" /> Final Save Record</>}
                                         </button>
