@@ -577,7 +577,7 @@ export default function Dashboard() {
                             </button>
                         </div>
 
-                        <form onSubmit={handleFormSubmit} className="flex-1 flex flex-col xl:flex-row overflow-hidden min-h-0">
+                        <form onSubmit={handleFormSubmit} className="flex-1 flex flex-col overflow-hidden min-h-0">
                             <div className="flex flex-1 flex-col xl:flex-row overflow-hidden">
                                 {/* Sidebar Navigation */}
                                 <div className="w-full xl:w-72 bg-gray-50 border-r border-gray-300 overflow-y-auto hidden md:block custom-scrollbar">
