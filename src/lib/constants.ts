@@ -42,6 +42,7 @@ export const PFM_HEADERS = [
   "Special features",
   "Base Matrix Applicability",
   "Family Name",
+  "Feature Score",
   "Part Family Code",
   "Nos of Bends",
   "Nos of Bends Criteria Weight",

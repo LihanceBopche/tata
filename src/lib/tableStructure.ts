@@ -1,7 +1,7 @@
 export const SUPER_HEADERS = [
   {
     "name": "SM-Manufacturing Engineering (Owner: Vikrant M, Ashlesha N)",
-    "colSpan": 91,
+    "colSpan": 92,
     "color": "9BC2E6"
   },
   {
@@ -34,7 +34,7 @@ export const SUB_HEADERS = [
   },
   {
     "name": "Base Matrix Sheet",
-    "colSpan": 48,
+    "colSpan": 49,
     "color": "FCE4D6"
   },
   {

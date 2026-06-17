@@ -51,7 +51,7 @@ export default function Dashboard() {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const setContent = async (userRes: any, dataRes: any) => {
             setUser((await userRes.json()).user);
-            if (dataRes.ok) setData((await dataRes.json()).data || []);
+            if (dataRes.ok) setData(((await dataRes.json()).data || []).reverse());
             setLoading(false);
         };
 
@@ -209,6 +209,7 @@ export default function Dashboard() {
                     }
                     next['Base Matrix Total Score'] = 'NA';
                     next['Family Name'] = 'NA';
+                    next['Feature Score'] = 'NA';
                     next['Part Family Code'] = 'NA';
                 } else if (val === 'Yes') {
                     for (const k of Object.keys(BASE_MATRIX_WEIGHTS)) {
@@ -219,6 +220,7 @@ export default function Dashboard() {
                     }
                     next['Base Matrix Total Score'] = '';
                     if (next['Family Name'] === 'NA') next['Family Name'] = '';
+                    if (next['Feature Score'] === 'NA') next['Feature Score'] = '';
                     if (next['Part Family Code'] === 'NA') next['Part Family Code'] = '';
                 }
             }
@@ -248,14 +250,20 @@ export default function Dashboard() {
                 }
                 if (isValid) {
                     next['Base Matrix Total Score'] = totalScore.toFixed(3);
+                    // AUTO Feature Score from total matrix score
+                    const fs = Math.min(5, Math.max(1, Math.round(totalScore)));
+                    next['Feature Score'] = fs.toString();
                 }
             }
 
-            if (['Family Name', 'Alloy', 'RM Input Type', 'Finish part Length (mm)', 'Finish part width (mm)', 'Unit'].includes(field)) {
+            // Recalculate family code when any relevant field changes
+            const familyTriggers = ['Family Name', 'Alloy', 'RM Input Type', 'Finish part Length (mm)', 'Finish part width (mm)', 'Unit', 'Feature Score'];
+            if (familyTriggers.includes(field) || Object.keys(BASE_MATRIX_WEIGHTS).includes(field)) {
                 const type = next['Family Name']?.split(' - ')[0] || '';
                 const mat = next['Alloy']?.split(' - ')[0] || '';
                 const form = next['RM Input Type']?.split(' - ')[0] || '';
 
+                // Auto Size from dimensions
                 const lengthVal = parseFloat(next['Finish part Length (mm)']) || 0;
                 const widthVal = parseFloat(next['Finish part width (mm)']) || 0;
                 let maxDim = Math.max(lengthVal, widthVal);
@@ -267,13 +275,12 @@ export default function Dashboard() {
                 else if (maxDim >= 300) size = 'M';
                 else if (maxDim >= 100) size = 'S';
                 else if (maxDim > 0) size = 'XS';
+                if (size) next['Size (Auto)'] = size;
 
-                const parts = [type, mat, form, size].filter(Boolean);
-                if (parts.length > 0) {
-                    next["Part Family Code"] = parts.join('-');
-                } else {
-                    next["Part Family Code"] = '';
-                }
+                const fsNum = next['Feature Score'] || '';
+
+                const parts = [type, mat, form, size, fsNum].filter(Boolean);
+                next["Part Family Code"] = parts.length > 0 ? parts.join(' - ') : '';
             }
 
             return next;
@@ -752,11 +759,14 @@ export default function Dashboard() {
                                                             ) : (
                                                                 <input
                                                                     type="text"
-                                                                    placeholder={`Enter ${displayLabel.toLowerCase()}...`}
-                                                                    className={`w-full px-4 py-2.5 border rounded-sm focus:outline-none focus:border-tata-blue focus:ring-1 focus:ring-tata-blue text-sm shadow-sm transition-all font-medium ${h === 'Base Matrix Total Score' ? 'bg-gray-100 cursor-not-allowed font-extrabold text-tata-dark border-gray-300' : 'bg-white border-gray-300 hover:border-gray-400 text-gray-800'}`}
+                                                                    placeholder={h === 'Feature Score' ? 'Auto-calculated from matrix score...' : h === 'Part Family Code' ? 'Auto-generated...' : `Enter ${displayLabel.toLowerCase()}...`}
+                                                                    className={`w-full px-4 py-2.5 border rounded-sm focus:outline-none text-sm shadow-sm transition-all font-medium ${h === 'Base Matrix Total Score' || h === 'Feature Score' || h === 'Part Family Code'
+                                                                            ? 'bg-amber-50 cursor-not-allowed font-extrabold text-tata-dark border-amber-300'
+                                                                            : 'bg-white border-gray-300 hover:border-gray-400 text-gray-800 focus:border-tata-blue focus:ring-1 focus:ring-tata-blue'
+                                                                        }`}
                                                                     value={formData[h] || ''}
                                                                     onChange={(e) => handleInputChange(h, e.target.value)}
-                                                                    disabled={h === 'Base Matrix Total Score'}
+                                                                    disabled={h === 'Base Matrix Total Score' || h === 'Feature Score' || h === 'Part Family Code'}
                                                                 />
                                                             )}
                                                             {['If any', 'If Any', 'Any other', 'Any Other'].includes(formData[h]) && (
@@ -773,12 +783,36 @@ export default function Dashboard() {
                                                 })}
                                             </div>
 
-                                            {activeTab === 'Base Matrix Sheet' && formData['Part Family Code'] && formData['Base Matrix Applicability'] === 'Yes' && (
-                                                <div className="mt-10 mb-2 p-6 bg-blue-50/50 border-2 border-dashed border-tata-accent/50 rounded-sm">
-                                                    <h3 className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-3 text-center">Generated Part Family Code</h3>
-                                                    <div className="text-3xl font-black text-tata-blue text-center tracking-widest uppercase">
-                                                        {formData['Part Family Code']}
+                                            {activeTab === 'Base Matrix Sheet' && formData['Base Matrix Applicability'] === 'Yes' && (
+                                                <div className="mt-8 mb-2 p-6 bg-gradient-to-br from-slate-50 to-blue-50 border-2 border-tata-blue/20 rounded-sm shadow-inner">
+                                                    <h3 className="text-xs font-black text-gray-500 uppercase tracking-widest mb-4 text-center">Part Family Code</h3>
+                                                    {/* Colored segment display like PPT */}
+                                                    <div className="flex items-center justify-center flex-wrap gap-0">
+                                                        {[
+                                                            { label: 'PART TYPE', value: formData['Family Name']?.split(' - ')[0] || '?', color: '#2563EB', bg: '#DBEAFE' },
+                                                            { label: 'MATERIAL', value: formData['Alloy']?.split(' - ')[0] || formData['Alloy'] || '?', color: '#16A34A', bg: '#DCFCE7' },
+                                                            { label: 'FORM', value: formData['RM Input Type']?.split(' - ')[0] || '?', color: '#DC2626', bg: '#FEE2E2' },
+                                                            { label: 'SIZE', value: (() => { const l = parseFloat(formData['Finish part Length (mm)']) || 0; const w = parseFloat(formData['Finish part width (mm)']) || 0; let m = Math.max(l, w); if (formData['Unit'] === 'Inch') m *= 25.4; if (m > 1800) return 'XL'; if (m >= 800) return 'L'; if (m >= 300) return 'M'; if (m >= 100) return 'S'; if (m > 0) return 'XS'; return '?'; })(), color: '#7C3AED', bg: '#EDE9FE' },
+                                                            { label: 'FEATURE SCORE', value: formData['Feature Score'] || '?', color: '#D97706', bg: '#FEF3C7' },
+                                                        ].map((seg, i, arr) => (
+                                                            <div key={i} className="flex items-center">
+                                                                <div className="flex flex-col items-center">
+                                                                    <span className="text-[9px] font-black tracking-widest mb-1" style={{ color: seg.color }}>{seg.label}</span>
+                                                                    <div className="px-5 py-3 text-2xl font-black tracking-wider rounded-sm shadow-sm" style={{ backgroundColor: seg.bg, color: seg.color, minWidth: 60, textAlign: 'center' }}>
+                                                                        {seg.value}
+                                                                    </div>
+                                                                </div>
+                                                                {i < arr.length - 1 && (
+                                                                    <span className="text-3xl font-black text-gray-400 mx-2 mt-4">—</span>
+                                                                )}
+                                                            </div>
+                                                        ))}
                                                     </div>
+                                                    {formData['Part Family Code'] && (
+                                                        <p className="text-center text-xs text-gray-400 mt-4 tracking-widest uppercase font-semibold">
+                                                            Full Code: <span className="text-tata-blue font-black">{formData['Part Family Code']}</span>
+                                                        </p>
+                                                    )}
                                                 </div>
                                             )}
                                         </div>
