@@ -757,17 +757,26 @@ export default function Dashboard() {
                                                                     )}
                                                                 </div>
                                                             ) : (
-                                                                <input
-                                                                    type="text"
-                                                                    placeholder={h === 'Feature Score' ? 'Auto-calculated from matrix score...' : h === 'Part Family Code' ? 'Auto-generated...' : `Enter ${displayLabel.toLowerCase()}...`}
-                                                                    className={`w-full px-4 py-2.5 border rounded-sm focus:outline-none text-sm shadow-sm transition-all font-medium ${h === 'Base Matrix Total Score' || h === 'Feature Score' || h === 'Part Family Code'
-                                                                        ? 'bg-amber-50 cursor-not-allowed font-extrabold text-tata-dark border-amber-300'
-                                                                        : 'bg-white border-gray-300 hover:border-gray-400 text-gray-800 focus:border-tata-blue focus:ring-1 focus:ring-tata-blue'
-                                                                        }`}
-                                                                    value={formData[h] || ''}
-                                                                    onChange={(e) => handleInputChange(h, e.target.value)}
-                                                                    disabled={h === 'Base Matrix Total Score' || h === 'Feature Score' || h === 'Part Family Code'}
-                                                                />
+                                                                (() => {
+                                                                    const hl = h.toLowerCase();
+                                                                    const isNum = ['(mm)', '(inch)', '(nos)', 'no. of', 'nos of'].some(str => hl.includes(str));
+                                                                    return (
+                                                                        <input
+                                                                            type={isNum ? 'number' : 'text'}
+                                                                            step={isNum ? 'any' : undefined}
+                                                                            min={isNum ? '0' : undefined}
+                                                                            placeholder={h === 'Feature Score' ? 'Auto-calculated from matrix score...' : h === 'Part Family Code' ? 'Auto-generated...' : `Enter ${displayLabel.toLowerCase()}...`}
+                                                                            className={`w-full px-4 py-2.5 border rounded-sm focus:outline-none text-sm shadow-sm transition-all font-medium ${h === 'Base Matrix Total Score' || h === 'Feature Score' || h === 'Part Family Code'
+                                                                                ? 'bg-amber-50 cursor-not-allowed font-extrabold text-tata-dark border-amber-300'
+                                                                                : 'bg-white border-gray-300 hover:border-gray-400 text-gray-800 focus:border-tata-blue focus:ring-1 focus:ring-tata-blue'
+                                                                                }`}
+                                                                            value={formData[h] || ''}
+                                                                            onChange={(e) => handleInputChange(h, e.target.value)}
+                                                                            disabled={h === 'Base Matrix Total Score' || h === 'Feature Score' || h === 'Part Family Code'}
+                                                                            onWheel={(e) => isNum && (e.target as HTMLElement).blur()}
+                                                                        />
+                                                                    );
+                                                                })()
                                                             )}
                                                             {['If any', 'If Any', 'Any other', 'Any Other'].includes(formData[h]) && (
                                                                 <input
