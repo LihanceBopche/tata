@@ -32,7 +32,7 @@ export const DROPDOWN_OPTIONS: Record<string, string[]> = {
         "Coordination/Tooling Holes"
     ],
     "Part Category": ["SKN - Skin", "FRM - Frame", "RIB - Rib", "SPR - Spar", "STR - Stringer", "BRK - Bracket", "FIT - Fitting", "FAR - Fairings", "BEM - Beam", "DOR - Door", "SUP - Support", "WPL - Wing Panels", "SHM - Shims", "ANG - Angles", "INC - Intercostals", "CLP - Clip", "DOU - Doubler", "Detail Part", "Assembly", "Sub-Assembly"],
-    "RM material Type": ["AL - Aluminium", "2024PL", "1000 Series", "2000 Series", "3000 Series", "4000 Series", "5000 Series", "6000 Series", "7000 Series", "Titanium", "Steel", "Inconel", "Copper", "Any other"],
+    "RM material Type": ["AL - Aluminium", "2024PL", "Titanium", "Steel", "Inconel", "Copper", "Any other"],
     "RM Input Type": ["SHT - Sheet", "EX - Extrusion", "TB - Tube", "Sheet", "Plate", "Casting", "Forging"],
     "Part Scope": ["TASL-N01", "TASL-H01", "TASL-N02", "Buy Scope"],
     "Initial Temper": ["F", "O", "H111", "T3", "T4", "Any other"],
