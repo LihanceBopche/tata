@@ -257,10 +257,10 @@ export default function Dashboard() {
             }
 
             // Recalculate family code when any relevant field changes
-            const familyTriggers = ['Family Name', 'Alloy', 'RM Input Type', 'Finish part Length (mm)', 'Finish part width (mm)', 'Unit', 'Feature Score'];
+            const familyTriggers = ['Family Name', 'RM material Type', 'RM Input Type', 'Finish part Length (mm)', 'Finish part width (mm)', 'Unit', 'Feature Score'];
             if (familyTriggers.includes(field) || Object.keys(BASE_MATRIX_WEIGHTS).includes(field)) {
                 const type = next['Family Name']?.split(' - ')[0] || '';
-                const mat = next['Alloy']?.split(' - ')[0] || '';
+                const mat = next['RM material Type']?.split(' - ')[0] || '';
                 const form = next['RM Input Type']?.split(' - ')[0] || '';
 
                 // Auto Size from dimensions
@@ -790,7 +790,7 @@ export default function Dashboard() {
                                                     <div className="flex items-center justify-center flex-wrap gap-0">
                                                         {[
                                                             { label: 'PART TYPE', value: formData['Family Name']?.split(' - ')[0] || '?', color: '#2563EB', bg: '#DBEAFE' },
-                                                            { label: 'MATERIAL', value: formData['Alloy']?.split(' - ')[0] || formData['Alloy'] || '?', color: '#16A34A', bg: '#DCFCE7' },
+                                                            { label: 'MATERIAL', value: formData['RM material Type']?.split(' - ')[0] || formData['RM material Type'] || '?', color: '#16A34A', bg: '#DCFCE7' },
                                                             { label: 'FORM', value: formData['RM Input Type']?.split(' - ')[0] || '?', color: '#DC2626', bg: '#FEE2E2' },
                                                             { label: 'SIZE', value: (() => { const l = parseFloat(formData['Finish part Length (mm)']) || 0; const w = parseFloat(formData['Finish part width (mm)']) || 0; let m = Math.max(l, w); if (formData['Unit'] === 'Inch') m *= 25.4; if (m > 1800) return 'XL'; if (m >= 800) return 'L'; if (m >= 300) return 'M'; if (m >= 100) return 'S'; if (m > 0) return 'XS'; return '?'; })(), color: '#7C3AED', bg: '#EDE9FE' },
                                                             { label: 'FEATURE SCORE', value: formData['Feature Score'] || '?', color: '#D97706', bg: '#FEF3C7' },
