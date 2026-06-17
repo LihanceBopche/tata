@@ -4,7 +4,7 @@ import './globals.css';
 
 export const metadata: Metadata = {
   title: 'TASL Platform Dashboard',
-  description: 'Dassault Rafale Lateral Shell PFM',
+  description: 'Engineering PFM',
 };
 
 export default function RootLayout({

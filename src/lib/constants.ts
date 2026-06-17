@@ -41,7 +41,6 @@ export const PFM_HEADERS = [
   "Total No. of Coordination/Tooling Holes",
   "Special features",
   "Base Matrix Applicability",
-  "Feature Score",
   "Family Name",
   "Part Family Code",
   "Nos of Bends",

@@ -52,7 +52,6 @@ export const FIELD_GROUPS: Record<string, string[]> = {
   ],
   "Base Matrix Sheet": [
     "Base Matrix Applicability",
-    "Feature Score",
     "Family Name",
     "Part Family Code",
     "Nos of Bends",

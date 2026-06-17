@@ -43,8 +43,8 @@ export default function Login() {
                         className="h-16 mb-4 drop-shadow-md"
                     />
                 </div>
-                <h2 className="text-2xl font-bold text-center text-tata-dark mb-2">TATA Advanced Systems</h2>
-                <p className="text-sm font-medium text-center text-gray-500 mb-6 tracking-wide">DASSAULT RAFALE SHELL PFM</p>
+                <h1 className="text-2xl font-bold text-center text-tata-dark tracking-tight">TATA Advanced Systems</h1>
+                <p className="text-sm font-medium text-center text-gray-500 mb-6 tracking-wide">ENGINEERING PFM</p>
 
                 <form onSubmit={handleSubmit} className="space-y-4">
                     <div>

@@ -28,7 +28,7 @@ export default function Navbar({ user }: { user: any }) {
                         />
                         <div className="flex flex-col">
                             <span className="font-bold text-lg leading-tight text-tata-dark">TATA Advanced Systems</span>
-                            <span className="text-xs font-semibold text-gray-500 uppercase tracking-widest">Dassault Rafale PFM</span>
+                            <span className="text-xs font-semibold text-gray-500 uppercase tracking-widest">Engineering PFM</span>
                         </div>
                     </div>
                     <div className="flex items-center gap-4">

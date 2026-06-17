@@ -210,7 +210,6 @@ export default function Dashboard() {
                     next['Base Matrix Total Score'] = 'NA';
                     next['Family Name'] = 'NA';
                     next['Part Family Code'] = 'NA';
-                    next['Feature Score'] = 'NA';
                 } else if (val === 'Yes') {
                     for (const k of Object.keys(BASE_MATRIX_WEIGHTS)) {
                         if (next[k] === 'NA') next[k] = '';
@@ -221,7 +220,6 @@ export default function Dashboard() {
                     next['Base Matrix Total Score'] = '';
                     if (next['Family Name'] === 'NA') next['Family Name'] = '';
                     if (next['Part Family Code'] === 'NA') next['Part Family Code'] = '';
-                    if (next['Feature Score'] === 'NA') next['Feature Score'] = '';
                 }
             }
 
@@ -253,12 +251,10 @@ export default function Dashboard() {
                 }
             }
 
-            // PART FAMILY CODE Conditional Logic
-            if (['Family Name', 'Alloy', 'RM Input Type', 'Finish part Length (mm)', 'Finish part width (mm)', 'Feature Score', 'Unit'].includes(field)) {
+            if (['Family Name', 'Alloy', 'RM Input Type', 'Finish part Length (mm)', 'Finish part width (mm)', 'Unit'].includes(field)) {
                 const type = next['Family Name']?.split(' - ')[0] || '';
                 const mat = next['Alloy']?.split(' - ')[0] || '';
                 const form = next['RM Input Type']?.split(' - ')[0] || '';
-                const comp = next['Feature Score']?.split(' - ')[0] || '';
 
                 const lengthVal = parseFloat(next['Finish part Length (mm)']) || 0;
                 const widthVal = parseFloat(next['Finish part width (mm)']) || 0;
@@ -272,7 +268,7 @@ export default function Dashboard() {
                 else if (maxDim >= 100) size = 'S';
                 else if (maxDim > 0) size = 'XS';
 
-                const parts = [type, mat, form, size, comp].filter(Boolean);
+                const parts = [type, mat, form, size].filter(Boolean);
                 if (parts.length > 0) {
                     next["Part Family Code"] = parts.join('-');
                 } else {
@@ -287,8 +283,22 @@ export default function Dashboard() {
     const handleFormSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
+        // Substitute custom values into main fields
+        const finalData = { ...formData };
+        for (const [key, val] of Object.entries(finalData)) {
+            if (['If any', 'If Any', 'Any other', 'Any Other'].includes(val as string)) {
+                if (finalData[`${key}_custom`]) {
+                    finalData[key] = finalData[`${key}_custom`];
+                }
+            }
+            // Cleanup custom fields from payload
+            if (key.endsWith('_custom')) {
+                delete finalData[key];
+            }
+        }
+
         // Block empty submissions
-        const hasValues = Object.values(formData).some(val => val && val.trim() !== '');
+        const hasValues = Object.values(finalData).some(val => val && (val as string).trim() !== '');
         if (!hasValues) {
             toast.error('Blank entry not allowed. Please fill out the form.');
             return;
@@ -299,7 +309,7 @@ export default function Dashboard() {
             const res = await fetch('/api/pfm', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(formData),
+                body: JSON.stringify(finalData),
             });
 
             const json = await res.json();
@@ -455,7 +465,7 @@ export default function Dashboard() {
 
         const workbook = XLSX.utils.book_new();
         XLSX.utils.book_append_sheet(workbook, worksheet, "PFM_R00");
-        XLSX.writeFile(workbook, "Dassault_Rafale_PFM_Export.xlsx");
+        XLSX.writeFile(workbook, "Engineering_PFM_Export.xlsx");
         toast.success('Export downloaded successfully!');
     };
 
@@ -477,7 +487,7 @@ export default function Dashboard() {
                             <Settings2 className="w-5 h-5 text-tata-dark" />
                         </div>
                         <div>
-                            <h1 className="text-2xl font-bold text-tata-dark uppercase tracking-tight">Dassault Rafale Lateral Shell PFM</h1>
+                            <h1 className="text-2xl font-bold text-tata-dark uppercase tracking-tight">Engineering PFM</h1>
                             <p className="text-xs text-gray-500 font-medium mt-0.5 tracking-wide">ENTERPRISE MANUFACTURING DATA MANAGEMENT</p>
                         </div>
                     </div>
@@ -749,10 +759,28 @@ export default function Dashboard() {
                                                                     disabled={h === 'Base Matrix Total Score'}
                                                                 />
                                                             )}
+                                                            {['If any', 'If Any', 'Any other', 'Any Other'].includes(formData[h]) && (
+                                                                <input
+                                                                    type="text"
+                                                                    placeholder={`Please specify...`}
+                                                                    className="mt-2 w-full px-4 py-2.5 border border-tata-accent rounded-sm focus:outline-none focus:border-tata-blue focus:ring-1 focus:ring-tata-blue text-sm shadow-sm transition-all font-bold text-tata-dark bg-blue-50"
+                                                                    value={formData[`${h}_custom`] || ''}
+                                                                    onChange={(e) => handleInputChange(`${h}_custom`, e.target.value)}
+                                                                />
+                                                            )}
                                                         </div>
                                                     );
                                                 })}
                                             </div>
+
+                                            {activeTab === 'Base Matrix Sheet' && formData['Part Family Code'] && formData['Base Matrix Applicability'] === 'Yes' && (
+                                                <div className="mt-10 mb-2 p-6 bg-blue-50/50 border-2 border-dashed border-tata-accent/50 rounded-sm">
+                                                    <h3 className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-3 text-center">Generated Part Family Code</h3>
+                                                    <div className="text-3xl font-black text-tata-blue text-center tracking-widest uppercase">
+                                                        {formData['Part Family Code']}
+                                                    </div>
+                                                </div>
+                                            )}
                                         </div>
                                     </div>
                                 </div>
