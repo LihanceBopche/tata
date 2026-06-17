@@ -51,7 +51,7 @@ export default function Dashboard() {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const setContent = async (userRes: any, dataRes: any) => {
             setUser((await userRes.json()).user);
-            if (dataRes.ok) setData(((await dataRes.json()).data || []).reverse());
+            if (dataRes.ok) setData((await dataRes.json()).data || []);
             setLoading(false);
         };
 
@@ -322,7 +322,7 @@ export default function Dashboard() {
             const json = await res.json();
 
             if (res.ok) {
-                setData([json.data, ...data]);
+                setData([...data, json.data]);
                 toast.success('Record saved successfully!');
                 setShowModal(false);
                 setFormData({});
@@ -761,8 +761,8 @@ export default function Dashboard() {
                                                                     type="text"
                                                                     placeholder={h === 'Feature Score' ? 'Auto-calculated from matrix score...' : h === 'Part Family Code' ? 'Auto-generated...' : `Enter ${displayLabel.toLowerCase()}...`}
                                                                     className={`w-full px-4 py-2.5 border rounded-sm focus:outline-none text-sm shadow-sm transition-all font-medium ${h === 'Base Matrix Total Score' || h === 'Feature Score' || h === 'Part Family Code'
-                                                                            ? 'bg-amber-50 cursor-not-allowed font-extrabold text-tata-dark border-amber-300'
-                                                                            : 'bg-white border-gray-300 hover:border-gray-400 text-gray-800 focus:border-tata-blue focus:ring-1 focus:ring-tata-blue'
+                                                                        ? 'bg-amber-50 cursor-not-allowed font-extrabold text-tata-dark border-amber-300'
+                                                                        : 'bg-white border-gray-300 hover:border-gray-400 text-gray-800 focus:border-tata-blue focus:ring-1 focus:ring-tata-blue'
                                                                         }`}
                                                                     value={formData[h] || ''}
                                                                     onChange={(e) => handleInputChange(h, e.target.value)}

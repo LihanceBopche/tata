@@ -15,7 +15,7 @@ export async function GET() {
         if (!token) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
         jwt.verify(token, JWT_SECRET);
 
-        const data = await PFMRecord.find({}).sort({ createdAt: -1 }).populate('createdBy', 'name email');
+        const data = await PFMRecord.find({}).sort({ createdAt: 1 }).populate('createdBy', 'name email');
         return NextResponse.json({ data }, { status: 200 });
     } catch (error: any) {
         console.error('PFM GET Error:', error);
