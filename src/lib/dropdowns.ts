@@ -33,6 +33,7 @@ export const DROPDOWN_OPTIONS: Record<string, string[]> = {
     ],
     "Part Category": ["SKN - Skin", "FRM - Frame", "RIB - Rib", "SPR - Spar", "STR - Stringer", "BRK - Bracket", "FIT - Fitting", "FAR - Fairings", "BEM - Beam", "DOR - Door", "SUP - Support", "WPL - Wing Panels", "SHM - Shims", "ANG - Angles", "INC - Intercostals", "CLP - Clip", "DOU - Doubler", "Detail Part", "Assembly", "Sub-Assembly"],
     "RM material Type": ["Inconel", "Aluminium", "Titanium", "Steel", "Copper"],
+    "Alloy": ["AL - Aluminium", "2024PL", "1000 Series", "2000 Series", "3000 Series", "4000 Series", "5000 Series", "6000 Series", "7000 Series", "Titanium", "Steel", "Inconel", "Any other"],
     "RM Input Type": ["SHT - Sheet", "EX - Extrusion", "TB - Tube", "Sheet", "Plate", "Casting", "Forging"],
     "Feature Score": ["1 - Simple", "2 - Low", "3 - Moderate", "4 - Complex", "5 - Very Complex"],
     "Part Scope": ["TASL-N01", "TASL-H01", "TASL-N02", "Buy Scope"],
